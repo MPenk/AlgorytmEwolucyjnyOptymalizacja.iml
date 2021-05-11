@@ -1,0 +1,194 @@
+package application;
+
+import java.io.PrintStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Random;
+
+public class Population {
+    /**
+     * Przechowywanie populacji
+     */
+    ArrayList<Chromosome> population = new ArrayList<>();
+
+    public Population() {
+    }
+
+    /**
+     * Dodawanie chromosomu do populacji
+     * @param chromosome chromosom który ma zostać dodany do populacji
+     */
+    public void add(Chromosome chromosome) {
+        this.population.add(chromosome);
+    }
+
+    /**
+     * Tworzenie okreslonej ilości losowych chromosomów i dodanie ich do populacji
+     * @param N ilośc chromosomów
+     * @param informations informacje o chromosomie
+     */
+    public void createNChromosomes(int N, Informations informations) {
+        for(int i = 0; i < N; ++i) {
+            this.add(new Chromosome(informations));
+        }
+    }
+
+    /**
+     * Zwrócenie wartości najlepszego chromosomu w populacji
+     * @return wartość funkcji nalepszego chromosomui w populacji
+     */
+    public double getTheBest(){
+        double max = population.get(0).decodeChromosome();
+        for (int i = 1; i < population.size(); i++) {
+            if(population.get(i).decodeChromosome()>max) max = population.get(i).decodeChromosome();
+        }
+        return max;
+    }
+
+    public void showOnlyFunction() {
+        System.out.println("=======================");
+        this.population.forEach((n) -> System.out.println(n.decodeChromosome()));
+        System.out.println();
+    }
+
+    public void showOnlyBits() {
+        System.out.println("=======================");
+        this.population.forEach((n) -> System.out.println(n.showChromosome()));
+        System.out.println();
+    }
+
+    public void showAll() {
+        System.out.println("=======================");
+        System.out.println(population.size());
+        System.out.println();
+        this.population.forEach((n) -> {
+            PrintStream var10000 = System.out;
+            String var10001 = n.showChromosome();
+            var10000.println(var10001 + " " + n.decodeChromosome());
+        });
+        System.out.println();
+    }
+
+    public void showAverage() {
+        System.out.println("=======================");
+        System.out.println("Średnia wartość to: " + Chromosome.averageFun(this.population));
+        System.out.println();
+    }
+
+    public void showLowerThanAverage() {
+        System.out.println("=======================");
+        System.out.println("Mniej niż średnia wartość: " + Chromosome.lowerThanAverage(this.population));
+        System.out.println();
+    }
+
+    public void showHigherThanAverage() {
+        System.out.println("=======================");
+        System.out.println("Więcej lub tyle samo co średnia wartość: " + Chromosome.higherThanAverage(this.population));
+        System.out.println();
+    }
+
+    /**
+     * Uruchomienie algorytmu genetycznego dla populacji
+     * @param pc Prawdopdobieństo krzyżowania
+     * @param pm Prawdopodobieństwo mutacji
+     * @return Nowa populacja
+     */
+    public Population ga(double pc, double pm) {
+        //Krzyżowanie populacji
+        Population p = multipointCrossingPopulation(pc);
+
+        //Mutowanie Populacji
+        p.mutatePopulation(pm);
+
+        //Zwracanie populacji
+        return p;
+    }
+
+    /**
+     * Mutowanie całej populacji.
+     * @param pm Prawdopodobieństo mutacji pojedyńczego osobnika
+     */
+    public void mutatePopulation(double pm){
+        Random r = new Random();
+        //Przejście po całej populacji
+        for (int i = 0; i < this.population.size(); i++) {
+            //Jeśli wylosowana liczba jest mniejsza niż prawdopodobieństow
+            if(r.nextDouble()>pm)
+                //Pomiń chromosom
+                continue;
+            //W aktualne miejsce chromosomu, wstaw nowy zmutowany chromosom
+            population.set(i,population.get(i).mutate());
+        }
+    }
+
+    /**
+     * Krzyżowanie wszyskich osobników w populacji.
+     * @param pc Prawdopodobieństwo skrzyżowania pojedyńczego osobnika
+     * @return Populację nowych (skrzyżowanych) i statych osobników
+     */
+    public Population multipointCrossingPopulation(double pc) {
+        Random r = new Random();
+
+        //tablica przechowywująca informacje czy Chromosom był już skrzyżowany i wypełnienie jej
+        boolean wasCrossed[] = new boolean[this.population.size()];
+        Arrays.fill(wasCrossed,false);
+
+        //Tworzenie nowej populacji
+        Population newPopulation = new Population();
+
+        //Przejście po każdym osobniku w populacji
+        for (int i = 0; i < this.population.size(); i++) {
+
+            //Jeśli Chromosom był już krzyżowany albo wylosowana liczba jest mniejsza niż prawdopodobieństwo skrzyżowania
+            if(wasCrossed[i] || r.nextDouble()>pc)
+                //Przejdź do następnego sobnika
+                continue;
+
+            //Zmienna do szukania drugiego osobnika do skrzyżowania
+            int j;
+
+            //Szukanie osobnika zdatnego do skrzyżowania
+            while(true){
+                j = r.nextInt(population.size());
+                if (j==i || wasCrossed[j]==true) continue;
+                break;
+            }
+            //Dodanie do populacji dzieci dwóch skrzyżowanych osobników
+            newPopulation.add( Chromosome.createChild(population.get(i), population.get(j),true));
+            newPopulation.add( Chromosome.createChild(population.get(i), population.get(j),false));
+
+            //Ustawienie osobników aby nie byli już dostepni do następnego krzyżowania
+            wasCrossed[i] = true;
+            wasCrossed[j] = true;
+
+        }
+
+        //Wypełnienie nowej populacji osobnikami które nie zostały skrzyżowane
+        for (int i = 0; i < this.population.size(); i++) {
+            if (wasCrossed[i] == false) {
+                newPopulation.add(population.get(i));
+            }
+        }
+
+        //zwrócenie nowej populacji
+        return newPopulation;
+    }
+
+    /**
+     * Metoda ruletkowa
+     * @return Nowa populacja
+     */
+    public Population rouletteMethod() {
+        Population newPopulation = new Population();
+
+        try {
+            for(int i = 0; i < this.population.size(); ++i) {
+                newPopulation.add(Chromosome.rouletteMethod(this.population));
+            }
+        } catch (Exception var3) {
+            System.out.println("Nie udało się stworzył nowej populacji: " + var3.getMessage());
+        }
+
+        return newPopulation;
+    }
+}
