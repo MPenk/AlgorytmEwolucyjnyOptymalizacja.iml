@@ -9,20 +9,20 @@ public class Gen {
     public int genLength;
 
     int[] genTab;
-    double ai;
-    double bi;
+    double min;
+    double max;
     double value;
 
     /**
      * Konstruktor genu.
      * @param d Dokładność
-     * @param ai Wartość ai
-     * @param bi Wartość bi
+     * @param min Wartość ai
+     * @param max Wartość bi
      */
-    public Gen(int d, double ai, double bi) {
-        this.ai = ai;
-        this.bi = bi;
-        this.genLength = log((bi - ai) * Math.pow(10.0D, (double)d), 2);
+    public Gen(int d, double min, double max) {
+        this.min = min;
+        this.max = max;
+        this.genLength = log((max - min) * Math.pow(10.0D, (double)d), 2);
         this.genTab = new int[this.genLength];
 
         while(!this.generateGen()) {
@@ -41,7 +41,7 @@ public class Gen {
         }
 
         this.value = this.decodeGen();
-        return this.value <= this.bi && this.value >= this.ai;
+        return this.value <= this.max && this.value >= this.min;
     }
 
     /**
@@ -69,9 +69,9 @@ public class Gen {
      * @return Wartość genu w systemie dziesiętnym
      */
     public double decodeGen() {
-        double c = (this.bi - this.ai) / (Math.pow(2.0D, (double)this.genLength) - 1.0D);
+        double c = (this.max - this.min) / (Math.pow(2.0D, (double)this.genLength) - 1.0D);
         int decode = Integer.parseInt(this.convertGenToString(), 2);
-        double x = this.ai + (double)decode * c;
+        double x = this.min + (double)decode * c;
         return x;
     }
 
