@@ -32,6 +32,7 @@ public class Chromosome {
 
         for(int i = 0; i < informations.getGenesNumber(); ++i) {
             this.gens[i] = new Gen(informations.getD(), informations.getAi(), informations.getBi());
+            this.gens[i].generateGen();
         }
         this.gensLenght = this.gens[0].genLength;
     }

@@ -25,10 +25,6 @@ public class Gen {
         this.genLength = log((max - min) * Math.pow(10.0D, (double)d), 2);
         this.genTab = new int[this.genLength];
 
-        while(!this.generateGen()) {
-            System.out.println("zła wartość genu: " + this.value);
-        }
-
     }
 
     /**
@@ -36,12 +32,14 @@ public class Gen {
      * @return Czy udało się poprawnie wypelnić gen
      */
     boolean generateGen() {
-        for(int i = 0; i < this.genLength; ++i) {
-            this.genTab[i] = getRandomBit();
-        }
+        do{
+            for(int i = 0; i < this.genLength; ++i) {
+                this.genTab[i] = getRandomBit();
+            }
 
-        this.value = this.decodeGen();
-        return this.value <= this.max && this.value >= this.min;
+            this.value = this.decodeGen();
+        }while (!(this.value <= this.max && this.value >= this.min));
+        return true;
     }
 
     /**
