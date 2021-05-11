@@ -1,29 +1,17 @@
 package application;
 
 import javafx.application.Application;
-import javafx.application.Platform;
-import javafx.beans.property.DoubleProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.chart.XYChart;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Array;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
+
 
 public class Main extends Application {
 
@@ -63,7 +51,10 @@ public class Main extends Application {
         min = new double[13];
         max = new double[13];
         Arrays.fill(min,0);
-        Arrays.fill(max,7);
+        Arrays.fill(max,1);
+        max[9] = 7;
+        max[10] = 7;
+        max[11] = 7;
         Informations informationsForContinuousTaskWithConstraints = new Informations(13,0,min,max,8,EFunctions.ContinuousTaskWithConstraints);
 
         ObservableList<Informations> informationsObservableList = FXCollections.observableArrayList(informationsForQuadratic,informationsForRastring,informationsForContinuousTaskWithConstraints);

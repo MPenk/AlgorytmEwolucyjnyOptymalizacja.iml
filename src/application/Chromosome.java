@@ -158,7 +158,7 @@ public class Chromosome {
         String tmp = "";
 
         for(int i = 0; i < this.informations.getGenesNumber(); ++i) {
-            tmp = tmp + this.gens[i].convertGenToString();
+            tmp = tmp + " " + this.gens[i].convertGenToString();
         }
 
         return tmp;
@@ -265,6 +265,8 @@ public class Chromosome {
                 return this.funcRastring();
             case Quadratic:
                 return this.funcQuadratic();
+            case ContinuousTaskWithConstraints:
+                return -999;
             default:
                 return  -100000;
         }
@@ -293,5 +295,26 @@ public class Chromosome {
         double x1 = this.gens[0].decodeGen();
         double x2 = this.gens[1].decodeGen();
         return -Math.pow(x1, 2.0D) - Math.pow(x2, 2.0D) + 2.0D;
+    }
+
+    double funcContinuousTaskWithConstraints() {
+        double x1 = this.gens[0].decodeGen();
+        double x2 = this.gens[1].decodeGen();
+        double x3 = this.gens[2].decodeGen();
+        double x4 = this.gens[3].decodeGen();
+        double sum1 = 5*(x1+x2+x3+x4);
+        double subtract1 = 0;
+        for (int i = 0; i < 4; i++) {
+            double gen = this.gens[i].decodeGen();
+            subtract1+= (gen * gen);
+        }
+        subtract1*=5;
+        double subtract2 = 0;
+        for (int i = 4; i < 13; i++) {
+            subtract2+= this.gens[i].decodeGen();
+        }
+        subtract2*=5;
+
+        return sum1-subtract1*subtract2;
     }
 }

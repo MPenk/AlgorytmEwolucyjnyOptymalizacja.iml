@@ -12,13 +12,19 @@ public class GAProperties {
     private int nThreads = 1;
     private int repetitions = 50;
     private int populationSize = 20;
+    private int from = 20;
+    private int to = 200;
+    private int step = 20;
     ExecutorService threadPool;
 
-    public GAProperties(Informations informations, int nThreads, int repetitions, int generations) {
+    public GAProperties(Informations informations, int nThreads, int repetitions, int generations, int from, int to, int step) {
         this.informations = informations;
         this.nThreads = nThreads;
         this.repetitions = repetitions;
         this.generations = generations;
+        this.from = from;
+        this.to = to;
+        this.step = step;
     }
 
     public double getPc() {
@@ -43,6 +49,18 @@ public class GAProperties {
 
     public int getRepetitions() {
         return repetitions;
+    }
+
+    public int getFrom() {
+        return from;
+    }
+
+    public int getTo() {
+        return to;
+    }
+
+    public int getStep() {
+        return step;
     }
 
     public int getPopulationSize() {

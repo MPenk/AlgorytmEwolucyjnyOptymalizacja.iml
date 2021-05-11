@@ -47,10 +47,9 @@ public class CalculationsController {
 
     }
 
-    void initData(Informations informations, int repetitons, int nThreads){
-        this.gaProperties = new GAProperties(informations,nThreads,repetitons,1000);
-
-        for (int i = 0; i < gaProperties.getnThreads(); i++) {
+    void initData(GAProperties gaProperties){
+        this.gaProperties = gaProperties;
+        for (int i = 0; i <  this.gaProperties.getnThreads(); i++) {
             ProgressBar progressBar = new ProgressBar();
             HBox hBox = new HBox();
             hBox.getChildren().add(new Text("Wątek " + i));
@@ -135,11 +134,11 @@ public class CalculationsController {
         long startTime = System.nanoTime();
         long lastLapTime = startTime;
         //Pętla odpowiedzialna za obliczanie algorytmów genetycznego dla różnych wielkości populacji
-        for (int i = 1; i <= 10; i++) {
+        for (int i = (gaProperties.getFrom()/ gaProperties.getStep()); i <= (gaProperties.getTo() / gaProperties.getStep()); i++) {
             gaProperties.reloadThreadPool();
 
             //Zapisywanie wyników algorytmu do tablicy
-            gaProperties.setPopulationSize(i*20);
+            gaProperties.setPopulationSize(i* gaProperties.getStep());
             double tab[][] = GA.GAStart(gaProperties,this);
 
             //Tworzenie pliku
@@ -154,7 +153,7 @@ public class CalculationsController {
             Long lapTime = (System.nanoTime() - lastLapTime);
             long duration = lapTime/1000000000;
             System.out.println("==========================================");
-            System.out.println("Zrobiono dla populaci o wielkości "+ i*20 + " w " + duration + " sekund");
+            System.out.println("Zrobiono dla populaci o wielkości "+ i*gaProperties.getStep() + " w " + duration + " sekund");
             System.out.println("==========================================");
             lastLapTime = System.nanoTime();
         }

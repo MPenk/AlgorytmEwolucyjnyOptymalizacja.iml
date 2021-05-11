@@ -23,6 +23,8 @@ public class Gen {
         this.min = min;
         this.max = max;
         this.genLength = log((max - min) * Math.pow(10.0D, (double)d), 2);
+        if(((max - min) * Math.pow(10.0D, (double)d))==1)
+            this.genLength = 1;
         this.genTab = new int[this.genLength];
 
     }

@@ -26,6 +26,18 @@ public class MainController {
     private Spinner<Integer> spinnerThreads;
 
     @FXML
+    private TextField tboxFrom;
+
+    @FXML
+    private TextField tboxTo;
+
+    @FXML
+    private TextField tboxStep;
+
+    @FXML
+    private TextField tboxGenerations;
+
+    @FXML
     void btnStart_OnClicked(MouseEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(this.getClass().getResource("Calculations.fxml"));
@@ -38,7 +50,8 @@ public class MainController {
         stage.getScene().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
         CalculationsController controller = loader.getController();
         stage.setOnHidden(e->controller.shutdown());
-        controller.initData(this.getFunction(),this.getRepetitions(),this.getThreads());
+        GAProperties gaProperties = new GAProperties(this.getFunction(),this.getThreads(),this.getRepetitions(),this.getGenerations(),this.getFrom(),this.getTo(),this.getStep());
+        controller.initData(gaProperties);
         stage.show();
         controller.main();
     }
@@ -71,5 +84,18 @@ public class MainController {
     int getRepetitions(){
         return Integer.parseInt(tboxRepetitions.getText());
     }
+    int getGenerations(){
+        return Integer.parseInt(tboxGenerations.getText());
+    }
+    int getFrom(){
+        return Integer.parseInt(tboxFrom.getText());
+    }
+    int getTo(){
+        return Integer.parseInt(tboxTo.getText());
+    }
+    int getStep(){
+        return Integer.parseInt(tboxStep.getText());
+    }
+
 
 }
