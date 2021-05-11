@@ -6,8 +6,8 @@ public class Informations {
 
     int genesNumber; //Ilość genów w chromosomie
     int d; //Wartość d, potrzebna do wyliczenia dokładności
-    double ai; //Wartość a
-    double bi; //Wartosć b
+    double min[]; //Wartość min
+    double max[]; //Wartosć max
     int numberOfCuts; //Ilosć cięć
 
     int A; //Wartosć A dla funkcji Rastringa
@@ -16,15 +16,15 @@ public class Informations {
      * Konstruktor tworzący dane dla funkcji kwadratowej
      * @param genesNumber Ilość genów w chromosomie
      * @param d Potrzenma wartość do wyliczenia dokładności
-     * @param ai Wartość ai
-     * @param bi Wartość bi
+     * @param min Wartość min
+     * @param max Wartość max
      */
-    Informations(int genesNumber, int d, double ai, double bi, int numberOfCuts){
-        this.function = EFunctions.Quadratic;
+    Informations(int genesNumber, int d, double min[], double max[], int numberOfCuts, EFunctions eFunctions){
+        this.function = eFunctions;
         this.genesNumber = genesNumber;
         this.d = d;
-        this.ai = ai;
-        this.bi = bi;
+        this.min = min;
+        this.max = max;
         this.numberOfCuts = numberOfCuts;
     }
 
@@ -32,26 +32,26 @@ public class Informations {
      * Konstruktor tworzący dane dla funkcji Rastring
      * @param genesNumber Ilość genów w chromosomie
      * @param d Potrzenma wartość do wyliczenia dokładności
-     * @param ai Wartość ai
-     * @param bi Wartość bi
+     * @param min Wartość min
+     * @param max Wartość max
      * @param A Wartość A
      */
-    Informations(int genesNumber, int d, double ai, double bi, int A, int numberOfCuts){
+    Informations(int genesNumber, int d, double[] min, double[] max, int A, int numberOfCuts){
         this.function = EFunctions.Rastring;
         this.genesNumber = genesNumber;
         this.d = d;
-        this.ai = ai;
-        this.bi = bi;
+        this.min = min;
+        this.max = max;
         this.A = A;
         this.numberOfCuts = numberOfCuts;
     }
 
-    public double getAi() {
-        return ai;
+    public double getMin(int i) {
+        return min[i];
     }
 
-    public double getBi() {
-        return bi;
+    public double getMax(int i) {
+        return max[i];
     }
 
     public EFunctions getFunction() {

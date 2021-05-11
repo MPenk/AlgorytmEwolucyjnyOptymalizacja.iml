@@ -16,7 +16,9 @@ import javafx.stage.Stage;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
@@ -46,10 +48,25 @@ public class Main extends Application {
         //mainPanel.getChildren().add(text);
 
 
-        Informations informationsForQuadratic = new Informations(2,5,-2,2,2);
-        Informations informationsForRastring = new Informations(10,3,-5.21,5.21,10,8);
+        double[] min = new double[2];
+        double[] max = new double[2];
+        Arrays.fill(min,-2);
+        Arrays.fill(max,2);
+        Informations informationsForQuadratic = new Informations(2,5,min,max,2,EFunctions.Quadratic);
 
-        ObservableList<Informations> informationsObservableList = FXCollections.observableArrayList(informationsForQuadratic,informationsForRastring);
+        min = new double[10];
+        max = new double[10];
+        Arrays.fill(min,-5.21);
+        Arrays.fill(max,-5.21);
+        Informations informationsForRastring = new Informations(10,3,min,max,10,8);
+
+        min = new double[13];
+        max = new double[13];
+        Arrays.fill(min,0);
+        Arrays.fill(max,7);
+        Informations informationsForContinuousTaskWithConstraints = new Informations(13,0,min,max,8,EFunctions.ContinuousTaskWithConstraints);
+
+        ObservableList<Informations> informationsObservableList = FXCollections.observableArrayList(informationsForQuadratic,informationsForRastring,informationsForContinuousTaskWithConstraints);
         controller.setFunction(informationsObservableList);
         controller.setThreads();
 

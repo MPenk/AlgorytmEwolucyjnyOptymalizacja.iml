@@ -1,5 +1,5 @@
 package application;
 
 public enum EFunctions {
-    Quadratic, Rastring
-}
+    Quadratic, Rastring, ContinuousTaskWithConstraints
+    }

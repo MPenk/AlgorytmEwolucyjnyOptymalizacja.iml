@@ -52,12 +52,13 @@ public class MainController {
         for (Informations information:lista) {
             this.chbxFunction.getItems().add(information);
         }
-        chbxFunction.setValue(chbxFunction.getItems().get(0));
+        chbxFunction.setValue(chbxFunction.getItems().get(2));
     }
     void setThreads(){
         int threads = Runtime.getRuntime().availableProcessors();
         SpinnerValueFactory spinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,threads,threads/2,1);
         this.spinnerThreads.setValueFactory(spinnerValueFactory);
+        spinnerValueFactory.setValue(1);
     }
 
     int getThreads(){

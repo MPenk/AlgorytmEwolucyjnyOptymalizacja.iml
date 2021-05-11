@@ -39,9 +39,14 @@ public class Population {
      */
     public double getTheBest(){
         double max = population.get(0).decodeChromosome();
+        Chromosome chrom = population.get(0);
         for (int i = 1; i < population.size(); i++) {
-            if(population.get(i).decodeChromosome()>max) max = population.get(i).decodeChromosome();
+            if(population.get(i).decodeChromosome()>max) {
+                max = population.get(i).decodeChromosome();
+                chrom = population.get(i);
+            }
         }
+        System.out.println(chrom.showChromosome());
         return max;
     }
 
