@@ -266,7 +266,7 @@ public class Chromosome {
             case Quadratic:
                 return this.funcQuadratic();
             case ContinuousTaskWithConstraints:
-                return -999;
+                return this.funcContinuousTaskWithConstraints();
             default:
                 return  -100000;
         }

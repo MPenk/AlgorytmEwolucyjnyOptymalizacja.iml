@@ -105,8 +105,15 @@ public class Population {
         //Mutowanie Populacji
         p.mutatePopulation(pm);
 
+        p.checkingLimitations();
+
         //Zwracanie populacji
         return p;
+    }
+
+    public void checkingLimitations()
+    {
+
     }
 
     /**
@@ -133,7 +140,7 @@ public class Population {
      */
     public Population multipointCrossingPopulation(double pc) {
         Random r = new Random();
-
+        int wasCrossedInt = 0;
         //tablica przechowywująca informacje czy Chromosom był już skrzyżowany i wypełnienie jej
         boolean wasCrossed[] = new boolean[this.population.size()];
         Arrays.fill(wasCrossed,false);
@@ -148,7 +155,7 @@ public class Population {
             if(wasCrossed[i] || r.nextDouble()>pc)
                 //Przejdź do następnego sobnika
                 continue;
-
+            if(wasCrossedInt>=(population.size()-1)) continue;
             //Zmienna do szukania drugiego osobnika do skrzyżowania
             int j;
 
@@ -165,6 +172,7 @@ public class Population {
             //Ustawienie osobników aby nie byli już dostepni do następnego krzyżowania
             wasCrossed[i] = true;
             wasCrossed[j] = true;
+            wasCrossedInt +=2;
 
         }
 

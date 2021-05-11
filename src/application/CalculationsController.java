@@ -146,7 +146,7 @@ public class CalculationsController {
             //Zapisywanie wyników do pliku
             FileOperations.saveToFile("plik"+i,tab,gaProperties);
 
-            int finalI = i;
+            int finalI = i* gaProperties.getStep();
             Platform.runLater(() ->  this.addNewTab(tab, finalI));
 
             //Informacja w konsoli
