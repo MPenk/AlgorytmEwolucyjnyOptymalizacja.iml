@@ -11,7 +11,7 @@ public class Gen {
     int[] genTab;
     double ai;
     double bi;
-    double value;
+    double value12;
 
     /**
      * Konstruktor genu.
