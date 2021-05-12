@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<StackPane minHeight="400" minWidth="600" prefHeight="500.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.views.CalculationsController">
+   <children>
+      <GridPane>
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="1.0" minWidth="1.0" prefWidth="1.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="-Infinity" percentWidth="35.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Pane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: GRAY;" GridPane.columnIndex="1" />
+            <TabPane fx:id="TabPane" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE">
+               <tabs>
+                  <Tab text="Aktualne">
+                     <content>
+                        <StackPane fx:id="actualPane" prefHeight="150.0" prefWidth="200.0" />
+                     </content>
+                  </Tab>
+               </tabs>
+            </TabPane>
+            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="2">
+               <children>
+                  <HBox alignment="TOP_CENTER">
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Postęp" />
+                     </children>
+                  </HBox>
+                  <StackPane>
+                     <children>
+                        <Text fx:id="txtProgress" fill="RED" strokeType="OUTSIDE" strokeWidth="0.0" text="W trakcie">
+                           <font>
+                              <Font name="System Bold" size="13.0" />
+                           </font>
+                        </Text>
+                     </children>
+                  </StackPane>
+                  <VBox fx:id="VBoxProgress" prefHeight="200.0" prefWidth="100.0" />
+               </children>
+            </VBox>
+         </children>
+      </GridPane>
+   </children>
+</StackPane>
