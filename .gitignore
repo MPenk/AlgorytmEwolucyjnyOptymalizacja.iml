@@ -1,4 +1,5 @@
 # Project exclude paths
 /out/
-/.idea/
+**/.idea/workspace.xml
+**/.idea/tasks.xml
 /Wyniki/
