@@ -1,4 +1,4 @@
-package application;
+package application.other;
 
 import java.util.Random;
 
@@ -93,7 +93,7 @@ public class Gen {
      * Wylosowanie losowej wartości w zakresie 0-1
      * @return Wartość 0 lub 1
      */
-    public static int getRandomBit() {
+    private static int getRandomBit() {
         Random r = new Random();
         return (int)Math.round(r.nextDouble());
     }
@@ -104,7 +104,7 @@ public class Gen {
      * @param b
      * @return
      */
-    public static int log(double d, int b) {
+    private static int log(double d, int b) {
         return (int)Math.ceil(Math.log(d) / Math.log((double)b));
     }
 }

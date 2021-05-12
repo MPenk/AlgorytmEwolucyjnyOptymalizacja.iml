@@ -1,4 +1,6 @@
-package application;
+package application.other;
+
+import application.functions.Function;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -25,12 +27,34 @@ public class Population {
     /**
      * Tworzenie okreslonej ilości losowych chromosomów i dodanie ich do populacji
      * @param N ilośc chromosomów
-     * @param informations informacje o chromosomie
+     * @param function informacje o chromosomie
      */
-    public void createNChromosomes(int N, Informations informations) {
+    public void createNChromosomes(int N, Function function) {
         for(int i = 0; i < N; ++i) {
-            this.add(new Chromosome(informations));
+            this.add(new Chromosome(function));
         }
+    }
+
+    public Chromosome getWanted(){
+        Chromosome wanted = population.get(0);
+        for (int i = 1; i < population.size(); i++) {
+            Chromosome chromosome = population.get(i);
+            if(chromosome.function.getWanted(wanted.decodeChromosome(),chromosome.decodeChromosome())){
+                wanted = chromosome;
+            }
+        }
+        return wanted;
+    }
+
+    public double getWantedValue(){
+        double wanted = population.get(0).decodeChromosome();
+        for (int i = 1; i < population.size(); i++) {
+            double value = population.get(i).decodeChromosome();
+            if(population.get(i).function.getWanted(wanted,value)){
+                wanted = value;
+            }
+        }
+        return wanted;
     }
 
     /**
@@ -39,15 +63,25 @@ public class Population {
      */
     public double getTheBest(){
         double max = population.get(0).decodeChromosome();
-        Chromosome chrom = population.get(0);
         for (int i = 1; i < population.size(); i++) {
             if(population.get(i).decodeChromosome()>max) {
                 max = population.get(i).decodeChromosome();
-                chrom = population.get(i);
             }
         }
-        System.out.println(chrom.showChromosome());
         return max;
+    }
+    /**
+     * Zwrócenie wartości najgorszego chromosomu w populacji
+     * @return wartość funkcji najgorszego chromosomui w populacji
+     */
+    public double getTheWorst(){
+        double min = population.get(0).decodeChromosome();
+        for (int i = 1; i < population.size(); i++) {
+            if(population.get(i).decodeChromosome()<min) {
+                min = population.get(i).decodeChromosome();
+            }
+        }
+        return min;
     }
 
     public void showOnlyFunction() {
@@ -105,15 +139,16 @@ public class Population {
         //Mutowanie Populacji
         p.mutatePopulation(pm);
 
+        //Sprawdzanie ograniczeń
         p.checkingLimitations();
 
         //Zwracanie populacji
         return p;
     }
 
-    public void checkingLimitations()
-    {
-
+    public void checkingLimitations() {
+        for (Chromosome chromosome: population)
+            chromosome.checkingLimitations();
     }
 
     /**

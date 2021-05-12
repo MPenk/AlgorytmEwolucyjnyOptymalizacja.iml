@@ -1,4 +1,6 @@
-package application;
+package application.other;
+
+import application.functions.Function;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,21 +22,30 @@ public class Chromosome {
     /**
      * Informacje dla chromosomu
      */
-    public Informations informations;
+    public Function function;
 
     /**
      * Konsturktor chromosomu
-     * @param informations Informacje o chromosomie
+     * @param function Informacje o chromosomie
      */
-    public Chromosome(Informations informations) {
-        this.informations = informations;
-        this.gens = new Gen[informations.getGenesNumber()];
+    public Chromosome(Function function) {
+        this.function = function;
+        this.gens = new Gen[function.getGenesNumber()];
 
-        for(int i = 0; i < informations.getGenesNumber(); ++i) {
-            this.gens[i] = new Gen(informations.getD(), informations.getMin(i), informations.getMax(i));
+        for(int i = 0; i < function.getGenesNumber(); ++i) {
+            this.gens[i] = new Gen(function.getD(), function.getMin(i), function.getMax(i));
             this.gens[i].generateGen();
         }
         this.gensLenght = this.gens[0].genLength;
+        this.checkingLimitations();
+    }
+
+    public void checkingLimitations() {
+        this.function.checkingLimitations(this);
+    }
+
+    public Gen getGen(int i) {
+        return gens[i];
     }
 
     /**
@@ -42,11 +53,11 @@ public class Chromosome {
      * @param n Miejsce w chromosomie do zmieny bitu
      * @param value Wartość dla bitu
      */
-    void setOneBit(int n, int value) {
+    private void setOneBit(int n, int value) {
         int whichGen = n/this.gensLenght;
         int whichBit = n%this.gensLenght;
-
         gens[whichGen].setBit(whichBit,value);
+
     }
 
     /**
@@ -54,7 +65,7 @@ public class Chromosome {
      * @param n Miejsce do pobrania wartości
      * @return Wartość bitu
      */
-    int getOneBit(int n) {
+    private int getOneBit(int n) {
         int whichGen = n/this.gensLenght;
         int whichBit = n%this.gensLenght;
 
@@ -70,12 +81,12 @@ public class Chromosome {
         double pm = 0.1;
 
         //Tworzenie nowego chromosomu
-        Chromosome newChromosome = new Chromosome(this.informations);
+        Chromosome newChromosome = new Chromosome(this.function);
         Random r = new Random();
         int tmp =0;
 
         //Mutowanie chromosomu
-        for(int i=0; i<this.informations.getGenesNumber()*this.gensLenght; i++) {
+        for(int i=0; i<this.function.getGenesNumber()*this.gensLenght; i++) {
             if(r.nextDouble()<pm) {
                 changeBit(newChromosome,i);
                 tmp++;
@@ -106,7 +117,7 @@ public class Chromosome {
      */
     public static Chromosome createChild(Chromosome dad, Chromosome mom, boolean itsFirstChild){
         //Tworzenie dziecka z wartościami jak u taty
-        Chromosome child = new Chromosome(dad.informations);
+        Chromosome child = new Chromosome(dad.function);
 
         //Czy aktualne bity są pobierane od taty czy od mamy
         boolean getFromDad;
@@ -115,9 +126,9 @@ public class Chromosome {
         else
             getFromDad = false;
         //Obliczanie długości chromomosomu
-        int chromosomeLength = dad.informations.getGenesNumber()* dad.gensLenght;
+        int chromosomeLength = dad.function.getGenesNumber()* dad.gensLenght;
         //Tworzenie tablicy z informacjami gdzie ciąć;
-        int[] wherCut = new int[dad.informations.getNumberOfCuts()];
+        int[] wherCut = new int[dad.function.getNumberOfCuts()];
 
         //Przypisywanie losowych wartości i sortowanie miejsc gdzie uciąć
         Random r = new Random();
@@ -157,7 +168,7 @@ public class Chromosome {
     String showChromosome() {
         String tmp = "";
 
-        for(int i = 0; i < this.informations.getGenesNumber(); ++i) {
+        for(int i = 0; i < this.function.getGenesNumber(); ++i) {
             tmp = tmp + " " + this.gens[i].convertGenToString();
         }
 
@@ -260,61 +271,6 @@ public class Chromosome {
      * @return Wartosć funkcji
      */
     public double decodeChromosome() {
-        switch(this.informations.getFunction()) {
-            case Rastring :
-                return this.funcRastring();
-            case Quadratic:
-                return this.funcQuadratic();
-            case ContinuousTaskWithConstraints:
-                return this.funcContinuousTaskWithConstraints();
-            default:
-                return  -100000;
-        }
-    }
-
-    /**
-     * Obliczenie wartości funkcji Restringa dla danego chromosomu
-     * @return Wartosć funkcji
-     */
-    double funcRastring() {
-        double sum = (double)(this.informations.getA() * this.informations.getGenesNumber());
-
-        for(int i = 0; i < this.informations.getGenesNumber(); ++i) {
-            double gen = this.gens[i].decodeGen();
-            sum += gen * gen - (double)this.informations.getA() * Math.cos((2*Math.PI) * gen);
-        }
-
-        return sum;
-    }
-
-    /**
-     * Obliczenie wartości funkcji kwadratowej dla danego chromosomu
-     * @return Wartosć funkcji
-     */
-    double funcQuadratic() {
-        double x1 = this.gens[0].decodeGen();
-        double x2 = this.gens[1].decodeGen();
-        return -Math.pow(x1, 2.0D) - Math.pow(x2, 2.0D) + 2.0D;
-    }
-
-    double funcContinuousTaskWithConstraints() {
-        double x1 = this.gens[0].decodeGen();
-        double x2 = this.gens[1].decodeGen();
-        double x3 = this.gens[2].decodeGen();
-        double x4 = this.gens[3].decodeGen();
-        double sum1 = 5*(x1+x2+x3+x4);
-        double subtract1 = 0;
-        for (int i = 0; i < 4; i++) {
-            double gen = this.gens[i].decodeGen();
-            subtract1+= (gen * gen);
-        }
-        subtract1*=5;
-        double subtract2 = 0;
-        for (int i = 4; i < 13; i++) {
-            subtract2+= this.gens[i].decodeGen();
-        }
-        subtract2*=5;
-
-        return sum1-subtract1*subtract2;
+            return  function.decodeFunction(this);
     }
 }

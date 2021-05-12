@@ -1,10 +1,12 @@
 package application;
 
+import application.enums.EFunctions;
+import application.functions.*;
+import application.views.MainController;
 import javafx.application.Application;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
@@ -15,39 +17,43 @@ import java.util.Arrays;
 
 public class Main extends Application {
 
-    static int count = 0;
-    static int sizee = 100;
-    static Text text = new Text( 30, 30, "HELLO WORLD");
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(getClass().getResource("Main.fxml"));
         FXMLLoader loader = new FXMLLoader();
-        loader.setLocation(this.getClass().getResource("Main.fxml"));
+        loader.setLocation(this.getClass().getResource("views/Main.fxml"));
 
         StackPane mainPanel = loader.load();
-        primaryStage.setTitle("Algorytm Ewolucyjny");
+        primaryStage.setTitle("Algorytmy Genetyczne");
         Scene scene = new Scene(mainPanel, 300,300);
         primaryStage.setScene(scene);
         primaryStage.setMinHeight(300);
-        primaryStage.setMinWidth(300);
+        primaryStage.setMinWidth(400);
         primaryStage.show();
         MainController controller = loader.getController();
-        //mainPanel.getChildren().add(text);
 
+        controller.setFunction(createFunctions());
+        controller.setThreads();
 
+    }
+
+    private ObservableList<Function> createFunctions(){
+
+        //Funkcja kwadratowa
         double[] min = new double[2];
         double[] max = new double[2];
         Arrays.fill(min,-2);
         Arrays.fill(max,2);
-        Informations informationsForQuadratic = new Informations(2,5,min,max,2,EFunctions.Quadratic);
+        Function FuncQuadratic = new Quadratic(2,5,min,max,2);
 
+        //Funkcja rastringa
         min = new double[10];
         max = new double[10];
         Arrays.fill(min,-5.21);
-        Arrays.fill(max,-5.21);
-        Informations informationsForRastring = new Informations(10,3,min,max,10,8);
+        Arrays.fill(max,5.21);
+        Function FuncRastring = new Rastring(10,3,min,max,8, 10);
 
+        //Funkcja z ograniczeniami
         min = new double[13];
         max = new double[13];
         Arrays.fill(min,0);
@@ -55,25 +61,11 @@ public class Main extends Application {
         max[9] = 7;
         max[10] = 7;
         max[11] = 7;
-        Informations informationsForContinuousTaskWithConstraints = new Informations(13,0,min,max,8,EFunctions.ContinuousTaskWithConstraints);
+        Function FuncQContinuousTaskWithConstraints = new ContinuousTaskWithConstraints(13,0,min,max,4);
 
-        ObservableList<Informations> informationsObservableList = FXCollections.observableArrayList(informationsForQuadratic,informationsForRastring,informationsForContinuousTaskWithConstraints);
-        controller.setFunction(informationsObservableList);
-        controller.setThreads();
 
+        return FXCollections.observableArrayList(FuncQuadratic,FuncRastring,FuncQContinuousTaskWithConstraints);
     }
-
-    static public void setChartData()
-    {
-
-    }
-
-    static public void incrementCount(int k) {
-        count++;
-        text.setText(Integer.toString(k));
-    }
-
-
 
     public static void main(String[] args) {
         launch(args);

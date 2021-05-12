@@ -1,4 +1,6 @@
-package application;
+package application.geneticAlgorithm;
+
+import application.functions.Function;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -8,17 +10,17 @@ public class GAProperties {
     private double pm = 0.2;
     private double pc = 0.6;
     private int generations = 1000;
-    private Informations informations;
+    private Function functions;
     private int nThreads = 1;
     private int repetitions = 50;
     private int populationSize = 20;
     private int from = 20;
     private int to = 200;
     private int step = 20;
-    ExecutorService threadPool;
+    public ExecutorService threadPool;
 
-    public GAProperties(Informations informations, int nThreads, int repetitions, int generations, int from, int to, int step) {
-        this.informations = informations;
+    public GAProperties(Function functions, int nThreads, int repetitions, int generations, int from, int to, int step) {
+        this.functions = functions;
         this.nThreads = nThreads;
         this.repetitions = repetitions;
         this.generations = generations;
@@ -35,8 +37,8 @@ public class GAProperties {
         return pm;
     }
 
-    public Informations getInformations() {
-        return informations;
+    public Function getFunction() {
+        return functions;
     }
 
     public int getGenerations() {

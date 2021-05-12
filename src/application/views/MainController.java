@@ -1,5 +1,7 @@
-package application;
+package application.views;
 
+import application.functions.Function;
+import application.geneticAlgorithm.GAProperties;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -17,7 +19,7 @@ public class MainController {
     private Button btnStart;
 
     @FXML
-    private ChoiceBox<Informations> chbxFunction;
+    private ChoiceBox<Function> chbxFunction;
 
     @FXML
     private TextField tboxRepetitions;
@@ -56,28 +58,23 @@ public class MainController {
         controller.main();
     }
 
-    @FXML
-    void initialize(){
-
-    }
-
-    void setFunction(ObservableList<Informations> lista){
-        for (Informations information:lista) {
-            this.chbxFunction.getItems().add(information);
+    public void setFunction(ObservableList<Function> list){
+        for (Function functions:list) {
+            this.chbxFunction.getItems().add(functions);
         }
         chbxFunction.setValue(chbxFunction.getItems().get(2));
     }
-    void setThreads(){
+    public void setThreads(){
         int threads = Runtime.getRuntime().availableProcessors();
         SpinnerValueFactory spinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(1,threads,threads/2,1);
         this.spinnerThreads.setValueFactory(spinnerValueFactory);
-        spinnerValueFactory.setValue(1);
+        spinnerValueFactory.setValue((threads/2)-1);
     }
 
     int getThreads(){
         return spinnerThreads.getValue();
     }
-    Informations getFunction() {
+    Function getFunction() {
         return chbxFunction.getValue();
     }
 

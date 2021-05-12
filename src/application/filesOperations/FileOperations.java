@@ -1,17 +1,26 @@
-package application;
+package application.filesOperations;
+
+import application.geneticAlgorithm.GAProperties;
 
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 
 public class FileOperations {
+
+    static String path = "Wyniki/";
+
     /**
      * Tworzenie pliku
      * @param fileName Nazwa pliku.
      */
     static public void createFile(String fileName){
         try {
-            File myFile = new File(fileName+".txt");
+            File theDir = new File(path);
+            if (!theDir.exists()){
+                theDir.mkdirs();
+            }
+            File myFile = new File(FileOperations.path+fileName+".txt");
             if (myFile.createNewFile()) {
                 System.out.println("File created: " + myFile.getName());
             } else {
@@ -30,7 +39,7 @@ public class FileOperations {
      */
     static public void saveToFile(String fileName, double tab[][], GAProperties gaProperties){
         try {
-            FileWriter myWriter = new FileWriter(fileName+".txt");
+            FileWriter myWriter = new FileWriter(FileOperations.path+fileName+".txt");
             myWriter.write("Wyniki pomiarów;\n");
             for (int i = 0; i < gaProperties.getGenerations(); i++) {
                 myWriter.write(tab[gaProperties.getRepetitions()][i]+";\n");

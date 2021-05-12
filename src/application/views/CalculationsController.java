@@ -1,5 +1,8 @@
-package application;
+package application.views;
 
+import application.filesOperations.FileOperations;
+import application.geneticAlgorithm.GAProperties;
+import application.geneticAlgorithm.GATask;
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
@@ -37,7 +40,6 @@ public class CalculationsController {
 
     @FXML
     void initialize(){
-
         lineChartActual.getData().add(seriesActual);
         lineChartActual.setAnimated(false);
         actualPane.getChildren().add(lineChartActual);
@@ -56,10 +58,9 @@ public class CalculationsController {
             hBox.getChildren().add(progressBar);
             VBoxProgress.getChildren().add(hBox);
         }
-
     }
 
-    void updateProgress(int thread, double progress){
+    public void updateProgress(int thread, double progress){
        HBox hBox = (HBox) VBoxProgress.getChildren().get(thread);
        ProgressBar progressBar = (ProgressBar) hBox.getChildren().get(1);
        progressBar.setProgress(progress);
@@ -79,7 +80,7 @@ public class CalculationsController {
         thread.start();
     }
 
-    void addDataToActualChart(double[] tab, String name)
+    public void addDataToActualChart(double[] tab, String name)
     {
         clearDataToActualChart();
         int i = 0;
@@ -94,10 +95,7 @@ public class CalculationsController {
         this.xAxisActual.setTickUnit(i/100);
         this.xAxisActual.setLowerBound(0);
     }
-    void addDataToActualChart(XYChart.Series series)
-    {
 
-    }
     void clearDataToActualChart() {
         if (!seriesActual.getData().isEmpty()) {
             seriesActual.getData().clear();
@@ -107,7 +105,7 @@ public class CalculationsController {
     void addNewTab(double[][] data, int number) {
         Tab newTab = new Tab();
         this.TabPane.getTabs().add(newTab);
-        newTab.setText("dane " + number);
+        newTab.setText("Populacja o wielkości " + number);
         StackPane stackPane = new StackPane();
         newTab.setContent(stackPane);
         final NumberAxis xAxis = new NumberAxis();
@@ -139,12 +137,13 @@ public class CalculationsController {
 
             //Zapisywanie wyników algorytmu do tablicy
             gaProperties.setPopulationSize(i* gaProperties.getStep());
-            double tab[][] = GA.GAStart(gaProperties,this);
+            double tab[][] = GATask.GAStart(gaProperties,this);
 
+            String fileName = "Funckja_"+gaProperties.getFunction().getFunction().toString()+"_o_wielkosc_populacji_"+String.valueOf(i);
             //Tworzenie pliku
-            FileOperations.createFile("plik"+i);
+            FileOperations.createFile(fileName);
             //Zapisywanie wyników do pliku
-            FileOperations.saveToFile("plik"+i,tab,gaProperties);
+            FileOperations.saveToFile(fileName,tab,gaProperties);
 
             int finalI = i* gaProperties.getStep();
             Platform.runLater(() ->  this.addNewTab(tab, finalI));
