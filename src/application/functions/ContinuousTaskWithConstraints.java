@@ -29,16 +29,16 @@ public class ContinuousTaskWithConstraints extends Function {
         boolean preserveLimitations = true;
         do{
             preserveLimitations = true;
-
-            //Ograniczenie 1
             double limitation = 0;
-            limitation += (2*chromosome.getGen(0).decodeGen());
-            limitation += (2*chromosome.getGen(1).decodeGen());
-            limitation += chromosome.getGen(9).decodeGen();
-            limitation += chromosome.getGen(10).decodeGen();
-            if(limitation>10)
+
+
+            //Ograniczenie 3 //-8x2+x11<=0
+            limitation = 0;
+            limitation -= (8*chromosome.getGen(1).decodeGen());
+            limitation += (chromosome.getGen(10).decodeGen());
+            if(limitation>0)
             {
-                ///////////////////////////
+                /////////////////////////// losowanie 1:8 czy zmienić x11 na 0 czy x2 na 1
                 //ZMIANA JEŚLI NIESPEŁNIONE
                 ///////////////////////////
                 //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
@@ -47,7 +47,100 @@ public class ContinuousTaskWithConstraints extends Function {
                 continue;
             }
 
-            //Ograniczenie 2
+            //Ograniczenie 7 //-8x1+x10<=0
+            limitation = 0;
+            limitation -= (8*chromosome.getGen(0).decodeGen());
+            limitation += (chromosome.getGen(9).decodeGen());
+            if(limitation>0) {
+                ///////////////////////////losowanie 1:8 czy zmienić x10 na 0 czy x1 na 1
+                //ZMIANA JEŚLI NIESPEŁNIONE
+                ///////////////////////////
+                //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
+
+                preserveLimitations = false;
+                continue;
+            }
+            //Ograniczenie 8 //-8x3+x12<=0
+            limitation = 0;
+            limitation -= (8*chromosome.getGen(2).decodeGen());
+            limitation += (chromosome.getGen(11).decodeGen());
+            if(limitation>0)
+            {
+                ///////////////////////////losowanie 1:8 czy zmienić x12 na 0 czy x3 na 1
+                //ZMIANA JEŚLI NIESPEŁNIONE
+                ///////////////////////////
+                //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
+
+                preserveLimitations = false;
+                continue;
+            }
+
+
+            //Ograniczenie 4 //-2x4-x5+x10<=0
+            limitation = 0;
+            limitation -= (2*chromosome.getGen(3).decodeGen());
+            limitation -= (chromosome.getGen(4).decodeGen());
+            limitation += (chromosome.getGen(9).decodeGen());
+            if(limitation>0)
+            {
+                ///////////////////////////jesli x10>3 to wylosuj nowe od (0;3) jeśli nie to losuj co zmienić
+                //ZMIANA JEŚLI NIESPEŁNIONE
+                ///////////////////////////
+                //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
+
+                preserveLimitations = false;
+                continue;
+            }
+
+            //Ograniczenie 5 //-2x4-x9+x12<=0
+            limitation = 0;
+            limitation -= (2*chromosome.getGen(3).decodeGen());
+            limitation -= (chromosome.getGen(8).decodeGen());
+            limitation += (chromosome.getGen(11).decodeGen());
+            if(limitation>0)
+            {
+                ///////////////////////////jesli x12>3 to wylosuj nowe od (0;3) jeśli nie to losuj co zmienić
+                //ZMIANA JEŚLI NIESPEŁNIONE
+                /////////////////////////// PS.Wydaje mi się ze tu zamiast x4 powinno być x8
+                //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
+
+                preserveLimitations = false;
+                continue;
+            }
+
+            //Ograniczenie 9 //-2x6-x7+x11<=0
+            limitation = 0;
+            limitation -= (2*chromosome.getGen(5).decodeGen());
+            limitation -= (chromosome.getGen(6).decodeGen());
+            limitation += (chromosome.getGen(10).decodeGen());
+            if(limitation>0)
+            {
+                ///////////////////////////jesli x11>3 to wylosuj nowe od (0;3) jeśli nie to losuj co zmienić
+                //ZMIANA JEŚLI NIESPEŁNIONE
+                ///////////////////////////
+                //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
+
+                preserveLimitations = false;
+                continue;
+            }
+            //Ograniczenie 1 //2x1+2x2+x10+x11<=10
+
+            limitation += (2*chromosome.getGen(0).decodeGen());
+            limitation += (2*chromosome.getGen(1).decodeGen());
+            limitation += chromosome.getGen(9).decodeGen();
+            limitation += chromosome.getGen(10).decodeGen();
+            if(limitation>10)
+            {
+                ///////////////////////////zawsze powinno byc spelnione jesli wszystkie wyzej sa ok
+                //ZMIANA JEŚLI NIESPEŁNIONE
+                ///////////////////////////
+                //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
+
+                preserveLimitations = false;
+                continue;
+            }
+
+            //Ograniczenie 2  //2x2+2x3+x11+x12<=10
             limitation = 0;
             limitation += (2*chromosome.getGen(1).decodeGen());
             limitation += (2*chromosome.getGen(2).decodeGen());
@@ -55,7 +148,7 @@ public class ContinuousTaskWithConstraints extends Function {
             limitation += chromosome.getGen(11).decodeGen();
             if(limitation>10)
             {
-                ///////////////////////////
+                ///////////////////////////zawsze powinno byc spelnione jesli wszystkie wyzej sa ok
                 //ZMIANA JEŚLI NIESPEŁNIONE
                 ///////////////////////////
                 //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
@@ -64,55 +157,7 @@ public class ContinuousTaskWithConstraints extends Function {
                 continue;
             }
 
-            //Ograniczenie 3
-            limitation = 0;
-            limitation -= (8*chromosome.getGen(1).decodeGen());
-            limitation += (chromosome.getGen(10).decodeGen());
-            if(limitation>0)
-            {
-                ///////////////////////////
-                //ZMIANA JEŚLI NIESPEŁNIONE
-                ///////////////////////////
-                //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
-
-                preserveLimitations = false;
-                continue;
-            }
-
-            //Ograniczenie 4
-            limitation = 0;
-            limitation -= (2*chromosome.getGen(3).decodeGen());
-            limitation -= (chromosome.getGen(4).decodeGen());
-            limitation += (chromosome.getGen(9).decodeGen());
-            if(limitation>0)
-            {
-                ///////////////////////////
-                //ZMIANA JEŚLI NIESPEŁNIONE
-                ///////////////////////////
-                //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
-
-                preserveLimitations = false;
-                continue;
-            }
-
-            //Ograniczenie 5
-            limitation = 0;
-            limitation -= (2*chromosome.getGen(3).decodeGen());
-            limitation -= (chromosome.getGen(8).decodeGen());
-            limitation += (chromosome.getGen(11).decodeGen());
-            if(limitation>0)
-            {
-                ///////////////////////////
-                //ZMIANA JEŚLI NIESPEŁNIONE
-                ///////////////////////////
-                //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
-
-                preserveLimitations = false;
-                continue;
-            }
-
-
-            //Ograniczenie 6
+            //Ograniczenie 6 //2x1+2x3+x10+x12<=10
             limitation = 0;
             limitation += (2*chromosome.getGen(0).decodeGen());
             limitation += (2*chromosome.getGen(2).decodeGen());
@@ -120,7 +165,7 @@ public class ContinuousTaskWithConstraints extends Function {
             limitation += chromosome.getGen(10).decodeGen();
             if(limitation>10)
             {
-                ///////////////////////////
+                ///////////////////////////zawsze powinno byc spelnione jesli wszystkie wyzej sa ok
                 //ZMIANA JEŚLI NIESPEŁNIONE
                 ///////////////////////////
                 //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
@@ -128,51 +173,6 @@ public class ContinuousTaskWithConstraints extends Function {
                 preserveLimitations = false;
                 continue;
             }
-
-            //Ograniczenie 7
-            limitation = 0;
-            limitation -= (8*chromosome.getGen(0).decodeGen());
-            limitation += (chromosome.getGen(9).decodeGen());
-            if(limitation>0) {
-                ///////////////////////////
-                //ZMIANA JEŚLI NIESPEŁNIONE
-                ///////////////////////////
-                //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
-
-                preserveLimitations = false;
-                continue;
-            }
-            //Ograniczenie 8
-            limitation = 0;
-            limitation -= (8*chromosome.getGen(2).decodeGen());
-            limitation += (chromosome.getGen(11).decodeGen());
-            if(limitation>0)
-            {
-                ///////////////////////////
-                //ZMIANA JEŚLI NIESPEŁNIONE
-                ///////////////////////////
-                //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
-
-                preserveLimitations = false;
-                continue;
-            }
-
-            //Ograniczenie 9
-            limitation = 0;
-            limitation -= (2*chromosome.getGen(5).decodeGen());
-            limitation -= (chromosome.getGen(6).decodeGen());
-            limitation += (chromosome.getGen(10).decodeGen());
-            if(limitation>0)
-            {
-                ///////////////////////////
-                //ZMIANA JEŚLI NIESPEŁNIONE
-                ///////////////////////////
-                //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
-
-                preserveLimitations = false;
-                continue;
-            }
-
 
 
         }while (!preserveLimitations);
