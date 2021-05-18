@@ -83,7 +83,7 @@ public class ContinuousTaskWithConstraints extends Function {
             limitation += (chromosome.getGen(9).decodeGen());
             if(limitation>0)
             {
-                ///////////////////////////jesli x10>3 to wylosuj nowe od (0;3) jeśli nie to losuj co zmienić
+                ///////////////////////////jesli x10>3 to wylosuj nowe od (0;3) i sprawdź czy ok jeśli nie to losuj co zmienić
                 //ZMIANA JEŚLI NIESPEŁNIONE
                 ///////////////////////////
                 //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
@@ -99,7 +99,7 @@ public class ContinuousTaskWithConstraints extends Function {
             limitation += (chromosome.getGen(11).decodeGen());
             if(limitation>0)
             {
-                ///////////////////////////jesli x12>3 to wylosuj nowe od (0;3) jeśli nie to losuj co zmienić
+                ///////////////////////////jesli x12>3 to wylosuj nowe od (0;3) i sprawdź czy ok jeśli nie to losuj co zmienić
                 //ZMIANA JEŚLI NIESPEŁNIONE
                 /////////////////////////// PS.Wydaje mi się ze tu zamiast x4 powinno być x8
                 //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
@@ -115,7 +115,7 @@ public class ContinuousTaskWithConstraints extends Function {
             limitation += (chromosome.getGen(10).decodeGen());
             if(limitation>0)
             {
-                ///////////////////////////jesli x11>3 to wylosuj nowe od (0;3) jeśli nie to losuj co zmienić
+                ///////////////////////////jesli x11>3 to wylosuj nowe od (0;3) i sprawdź czy ok jeśli nie to losuj co zmienić
                 //ZMIANA JEŚLI NIESPEŁNIONE
                 ///////////////////////////
                 //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
