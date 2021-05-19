@@ -49,7 +49,7 @@ public class Gen {
      * @param n Numer bitu
      * @param value Nowa wartość bitu
      */
-    void setBit(int n, int value)
+    public void setBit(int n, int value)
     {
         genTab[n] = value;
     }
@@ -98,6 +98,26 @@ public class Gen {
         return (int)Math.round(r.nextDouble());
     }
 
+    public void setGen(int valueInDec){
+        //TODO: OPTYMALIZACJA
+        String tmp  = Integer.toBinaryString(valueInDec);
+        int j = 0;
+        for (int i=0; i<this.genLength;i++) {
+            if(tmp.length()+i<this.genLength)
+            {
+                this.genTab[i]=0;
+                j++;
+                continue;
+            }
+            this.genTab[i]=Character.getNumericValue(tmp.charAt(i-j));
+        }
+    }
+
+    public void generateGenInRange(int min, int max)
+    {
+        int i = (int) ((Math.random() * (max - min)) + min);
+        this.setGen(i);
+    }
     /**
      * Obliczenie logarytmu
      * @param d

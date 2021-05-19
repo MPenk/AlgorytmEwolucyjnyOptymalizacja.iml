@@ -1,17 +1,21 @@
 package application.other;
 
 import application.functions.Function;
+import application.views.CalculationsController;
+import javafx.application.Platform;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 public class Population {
     /**
      * Przechowywanie populacji
      */
-    ArrayList<Chromosome> population = new ArrayList<>();
+    public ArrayList<Chromosome> population = new ArrayList<>();
 
     public Population() {
     }
@@ -126,21 +130,62 @@ public class Population {
         System.out.println();
     }
 
+    private  void addToPoplation(Population population){
+        for (Chromosome chromosom: this.population
+             ) {
+            population.population.add(chromosom);
+        }
+    }
+
+    double tabALL[] = new double[population.size()];
+    private void removeBad(int oldSize){
+
+        this.getTab();
+        population.sort(new Comparator<Chromosome>() {
+            @Override
+            public int compare(Chromosome first, Chromosome second)
+            {
+                return Double.compare(first.decodeChromosome(),second.decodeChromosome());
+            }
+        });
+        this.getTab();
+        for (int i = oldSize; i < population.size(); i++) {
+            population.remove(i--);
+        }
+        this.getTab();
+
+    }
+    public double[] getTab(){
+
+        double tab[] = new double[population.size()];
+
+        for (int i = 0; i <population.size(); i++) {
+            tab[i] = population.get(i).decodeChromosome();
+        }
+        tabALL =tab;
+        return tab;
+    }
+
     /**
      * Uruchomienie algorytmu genetycznego dla populacji
      * @param pc Prawdopdobieństo krzyżowania
      * @param pm Prawdopodobieństwo mutacji
      * @return Nowa populacja
      */
-    public Population ga(double pc, double pm) {
+    public Population ga(double pc, double pm, CalculationsController controller) throws InterruptedException {
         //Krzyżowanie populacji
+
         Population p = multipointCrossingPopulation(pc);
+
+        addToPoplation(p);
 
         //Mutowanie Populacji
         p.mutatePopulation(pm);
-
+       //p.getTab();
+        p.removeBad(population.size());
         //Sprawdzanie ograniczeń
         p.checkingLimitations();
+        //p.getTab();
 
         //Zwracanie populacji
         return p;
@@ -212,11 +257,11 @@ public class Population {
         }
 
         //Wypełnienie nowej populacji osobnikami które nie zostały skrzyżowane
-        for (int i = 0; i < this.population.size(); i++) {
-            if (wasCrossed[i] == false) {
-                newPopulation.add(population.get(i));
-            }
-        }
+        //for (int i = 0; i < this.population.size(); i++) {
+        //    if (wasCrossed[i] == false) {
+        //        newPopulation.add(population.get(i));
+        //    }
+        //}
 
         //zwrócenie nowej populacji
         return newPopulation;

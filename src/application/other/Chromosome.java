@@ -165,7 +165,7 @@ public class Chromosome {
         return child;
     }
 
-    String showChromosome() {
+    public String showChromosome() {
         String tmp = "";
 
         for(int i = 0; i < this.function.getGenesNumber(); ++i) {

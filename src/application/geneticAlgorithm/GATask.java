@@ -26,9 +26,9 @@ public class GATask implements Callable<double[]> {
     }
 
     @Override
-    public double[] call() {
+    public double[] call() throws InterruptedException {
 
-        System.out.println("Uruchomiono " + j + " powtórzenie dla ga " + gaProperties.getPopulationSize());
+       // System.out.println("Uruchomiono " + j + " powtórzenie dla ga " + gaProperties.getPopulationSize());
 
         //Tworzenie pierwszej populacji
         Population population = new Population();
@@ -45,8 +45,7 @@ public class GATask implements Callable<double[]> {
         for (int i = 1; i < gaProperties.getGenerations(); i++) {
 
             //wywołanie algorytmu genetycznego
-            population = population.ga(gaProperties.getPc(), gaProperties.getPm());
-
+            population = population.ga(gaProperties.getPc(), gaProperties.getPm(),controller);
             if (i % 1 == 0) {
                 //zapisywanie szukanego osobnika
                 tmpTab[i] = population.getWantedValue();
@@ -61,7 +60,7 @@ public class GATask implements Callable<double[]> {
         XYChart.Series series = new XYChart.Series();
         series.setName(j + " powtórzenie dla ga " + gaProperties.getPopulationSize());
         if(j% gaProperties.getnThreads()==gaProperties.getnThreads()-1)
-            Platform.runLater(() ->  controller.addDataToActualChart(tmpTab,(j+1) + " powtórzenie dla populacji o wielkości " + gaProperties.getPopulationSize()));
+           Platform.runLater(() ->  controller.addDataToActualChart(tmpTab,(j+1) + " powtórzenie dla populacji o wielkości " + gaProperties.getPopulationSize()));
 
         return tmpTab;
     }
@@ -109,9 +108,9 @@ public class GATask implements Callable<double[]> {
                 sum+=tab[j][i];
             }
 
-            if(wanted==null || gaProperties.getFunction().getWanted(wanted,(sum/gaProperties.getRepetitions()))){
+           // if(wanted==null || gaProperties.getFunction().getWanted(wanted,(sum/gaProperties.getRepetitions()))){
                 wanted = sum/gaProperties.getRepetitions();
-            }
+            //}
             tab[gaProperties.getRepetitions()][i] = wanted;
             // System.out.println( tab[gaProperties.getRepetitions()][i] + " i = " + i);
         }
