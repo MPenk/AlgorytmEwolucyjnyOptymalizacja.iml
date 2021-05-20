@@ -97,12 +97,13 @@ public class ContinuousTaskWithConstraints extends Function {
         }while(limitation>0);
 
             //Ograniczenie 4 //-2x4-x5+x10<=0
-            limitation = 0;
-            limitation -= (2*chromosome.getGen(3).decodeGen());
-            limitation -= (chromosome.getGen(4).decodeGen());
-            limitation += (chromosome.getGen(9).decodeGen());
-            if(limitation>0)
-            {
+            do{
+                limitation = 0;
+                limitation -= (2*chromosome.getGen(3).decodeGen());
+                limitation -= (chromosome.getGen(4).decodeGen());
+                limitation += (chromosome.getGen(9).decodeGen());
+                if(limitation<=0) break;
+
                 ///////////////////////////jesli x10>3 to wylosuj nowe od (0;3) i sprawdź czy ok jeśli nie to losuj co zmienić
                 //ZMIANA JEŚLI NIESPEŁNIONE
                 ///////////////////////////
@@ -124,14 +125,16 @@ public class ContinuousTaskWithConstraints extends Function {
                 chromosome.getGen(9).generateGenInRange(0,3);
 
             }
+            while(limitation>0);
 
             //Ograniczenie 5 //-2x4-x9+x12<=0
-            limitation = 0;
-            limitation -= (2*chromosome.getGen(3).decodeGen());
-            limitation -= (chromosome.getGen(8).decodeGen());
-            limitation += (chromosome.getGen(11).decodeGen());
-            if(limitation>0)
-            {
+            do {
+                limitation = 0;
+                limitation -= (2 * chromosome.getGen(3).decodeGen());
+                limitation -= (chromosome.getGen(8).decodeGen());
+                limitation += (chromosome.getGen(11).decodeGen());
+                if (limitation <= 0) break;
+
                 ///////////////////////////jesli x12>3 to wylosuj nowe od (0;3) i sprawdź czy ok jeśli nie to losuj co zmienić
                 //ZMIANA JEŚLI NIESPEŁNIONE
                 /////////////////////////// PS.Wydaje mi się ze tu zamiast x4 powinno być x8
@@ -161,8 +164,8 @@ public class ContinuousTaskWithConstraints extends Function {
             limitation -= (2*chromosome.getGen(5).decodeGen());
             limitation -= (chromosome.getGen(6).decodeGen());
             limitation += (chromosome.getGen(10).decodeGen());
-            if(limitation>0)
-            {
+            if(limitation<=0) break;
+
                 ///////////////////////////jesli x11>3 to wylosuj nowe od (0;3) i sprawdź czy ok jeśli nie to losuj co zmienić
                 //ZMIANA JEŚLI NIESPEŁNIONE
                 ///////////////////////////
@@ -187,7 +190,6 @@ public class ContinuousTaskWithConstraints extends Function {
 
 
             //Ograniczenie 1 //2x1+2x2+x10+x11<=10
-
             limitation += (2*chromosome.getGen(0).decodeGen());
             limitation += (2*chromosome.getGen(1).decodeGen());
             limitation += chromosome.getGen(9).decodeGen();
