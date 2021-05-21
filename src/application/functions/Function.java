@@ -1,6 +1,7 @@
 package application.functions;
 
 import application.enums.EFunctions;
+import application.exceptions.IncorrectLimitationException;
 import application.other.Chromosome;
 import application.other.Population;
 
@@ -32,7 +33,7 @@ public abstract class Function {
     abstract public boolean getWanted(double oldValue, double newValue);
     abstract public double getWanted(Population population);
 
-    abstract public void checkingLimitations(Chromosome chromosome);
+    abstract public void checkingLimitations(Chromosome chromosome) throws IncorrectLimitationException;
 
     abstract public double decodeFunction(Chromosome chromosome);
 

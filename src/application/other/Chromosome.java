@@ -1,5 +1,6 @@
 package application.other;
 
+import application.exceptions.IncorrectLimitationException;
 import application.functions.Function;
 
 import java.util.ArrayList;
@@ -43,7 +44,12 @@ public class Chromosome {
     }
 
     public void checkingLimitations() {
-        this.function.checkingLimitations(this);
+        try {
+            this.function.checkingLimitations(this);
+        }catch (IncorrectLimitationException exception){
+            mutate();
+            checkingLimitations();
+        }
     }
 
     public Gen getGen(int i) {

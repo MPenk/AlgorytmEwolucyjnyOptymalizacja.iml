@@ -30,11 +30,10 @@ public class Population {
      * @param N ilośc chromosomów
      * @param function informacje o chromosomie
      */
-    public void createNChromosomes(int N, Function function) throws InterruptedException {
-        for(int i = 0; i < N; ++i) {
+    public void createNChromosomes(int N, Function function) {
+        for(int i = 0; i < N; ++i)
             this.add(new Chromosome(function));
-        }
-        this.checkingLimitations();
+
     }
 
     public Chromosome getWanted(){
@@ -172,7 +171,7 @@ public class Population {
     }
     public void checkingLimitations() {
         for (Chromosome chromosome: population)
-            chromosome.checkingLimitations();
+               chromosome.checkingLimitations();
     }
 
     public void checkingLimitationsMultiThread() throws InterruptedException {
