@@ -2,6 +2,7 @@ package application.functions;
 
 import application.enums.EFunctions;
 import application.other.Chromosome;
+import application.other.Gen;
 import application.other.Population;
 
 import java.util.Random;
@@ -10,6 +11,7 @@ public class ContinuousTaskWithConstraints extends Function {
 
     public ContinuousTaskWithConstraints(int genesNumber, int d, double[] min, double[] max, int numberOfCuts) {
         super(genesNumber, d, min, max, numberOfCuts, EFunctions.ContinuousTaskWithConstraints);
+        super.chromosomeComparator = (first, second) -> Double.compare(first.decodeChromosome(),second.decodeChromosome());
     }
 
     @Override
@@ -24,48 +26,53 @@ public class ContinuousTaskWithConstraints extends Function {
         return population.getTheWorst();
     }
 
+    //Ograniczenie dla 2 podanych genów
+    protected boolean limitation2Values(Gen gen1, Gen gen2)
+    {
+        double limitation = 0;
+        limitation = 0;
+        limitation -= (8 * gen1.decodeGen());
+        limitation += (gen2.decodeGen());
+        if(limitation<=0)
+            return true;
+        return false;
+    }
+
+    //Ograniczenie dal 3 podanychGenów
+    protected boolean limitation3Values(Gen gen1, Gen gen2, Gen gen3)
+    {
+        double limitation = 0;
+        limitation -= (2*gen1.decodeGen());
+        limitation -= (gen2.decodeGen());
+        limitation += (gen3.decodeGen());
+        if(limitation<=0)
+            return true;
+        return false;
+    }
+
     @Override
     public void checkingLimitations(Chromosome chromosome) {
 
         //TODO Dodanie operacji zmieniajcych geny jeśli nie spełniają ograniczeń
-            double limitation = 0;
-            Random r = new Random();
-            double rand = 0;
-
-            boolean czyzmiana=false;
+        double limitation = 0;
+        Random r = new Random();
+        double rand = 0;
 
         //Ograniczenie 3 //-8x2+x11<=0
-        do{
-            limitation = 0;
-            limitation -= (8 * chromosome.getGen(1).decodeGen());
-            limitation += (chromosome.getGen(10).decodeGen());
-            if(limitation<=0)
-                break;
-            /////////////////////////// losowanie 1:8 czy zmienić x11 na 0 czy x2 na 1
-            //ZMIANA JEŚLI NIESPEŁNIONE
-            ///////////////////////////
-            //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
-
+        while (!limitation2Values(chromosome.getGen(1),chromosome.getGen(10)))
+        {
+            // losowanie 1:8 czy zmienić x11 na 0 czy x2 na 1
             rand = r.nextDouble();
             if(rand<0.125){
                 chromosome.getGen(10).setGen(0);
                 continue;
             }
             chromosome.getGen(1).setGen(1);
-            continue;
-        }while(limitation>0);
+        }
         //Ograniczenie 7 //-8x1+x10<=0
-        do{
-            limitation = 0;
-            limitation -= (8*chromosome.getGen(0).decodeGen());
-            limitation += (chromosome.getGen(9).decodeGen());
-            if(limitation<=0)
-                break;
-                ///////////////////////////losowanie 1:8 czy zmienić x10 na 0 czy x1 na 1
-                //ZMIANA JEŚLI NIESPEŁNIONE
-                ///////////////////////////
-                //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
-
+        while (!limitation2Values(chromosome.getGen(0),chromosome.getGen(9)))
+        {
+            //losowanie 1:8 czy zmienić x10 na 0 czy x1 na 1
             rand = r.nextDouble();
             if(rand<0.125){
                 chromosome.getGen(9).setGen(0);
@@ -73,28 +80,20 @@ public class ContinuousTaskWithConstraints extends Function {
             }
             chromosome.getGen(0).setGen(1);
 
-        }while(limitation>0);
+        }
 
 
         //Ograniczenie 8 //-8x3+x12<=0
-        do{
-            limitation = 0;
-            limitation -= (8*chromosome.getGen(2).decodeGen());
-            limitation += (chromosome.getGen(11).decodeGen());
-            if(limitation<=0)
-                break;
-                ///////////////////////////losowanie 1:8 czy zmienić x12 na 0 czy x3 na 1
-                //ZMIANA JEŚLI NIESPEŁNIONE
-                ///////////////////////////
-                //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
-
+        while (!limitation2Values(chromosome.getGen(2),chromosome.getGen(11)))
+        {
+            //losowanie 1:8 czy zmienić x12 na 0 czy x3 na 1
             rand = r.nextDouble();
             if(rand<0.125){
                 chromosome.getGen(11).setGen(0);
                 continue;
             }
             chromosome.getGen(2).setGen(1);
-        }while(limitation>0);
+        }
 
             //Ograniczenie 4 //-2x4-x5+x10<=0
             do{
@@ -147,7 +146,6 @@ public class ContinuousTaskWithConstraints extends Function {
                 rand = r.nextDouble();
                 if(rand<0.333){
                     chromosome.getGen(3).generateGenInRange(0,1);
-                    czyzmiana=true;
                     continue;
                 }
                 if(rand<0.666){
@@ -217,8 +215,6 @@ public class ContinuousTaskWithConstraints extends Function {
                 ///////////////////////////
                 //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
                 System.out.println("cos jest nie tak" );
-
-
             }
 
             //Ograniczenie 6 //2x1+2x3+x10+x12<=10
@@ -234,12 +230,9 @@ public class ContinuousTaskWithConstraints extends Function {
                 ///////////////////////////
                 //FIXME Operacje na genach, ponieważ nie spełniają ograniczenia
                 System.out.println("cos jest nie tak");
+            }
 
 
-            }
-            if(czyzmiana){
-                //System.out.println(czyzmiana);
-            }
 
     }
 

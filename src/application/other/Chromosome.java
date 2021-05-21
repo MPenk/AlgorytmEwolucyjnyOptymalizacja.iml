@@ -19,6 +19,8 @@ public class Chromosome {
      */
     int gensLenght;
 
+    Double value = null;
+
     /**
      * Informacje dla chromosomu
      */
@@ -45,6 +47,7 @@ public class Chromosome {
     }
 
     public Gen getGen(int i) {
+        this.value = null;
         return gens[i];
     }
 
@@ -76,36 +79,29 @@ public class Chromosome {
      * Mutacja Chromosomu
      * @return nowy - zmutowany Chromosom
      */
-    public Chromosome mutate() {
+    public void mutate() {
         //Prawdopodobieństwo zmutowania bitu
         double pm = 0.1;
 
         //Tworzenie nowego chromosomu
-        Chromosome newChromosome = new Chromosome(this.function);
         Random r = new Random();
-        int tmp =0;
 
         //Mutowanie chromosomu
         for(int i=0; i<this.function.getGenesNumber()*this.gensLenght; i++) {
             if(r.nextDouble()<pm) {
-                changeBit(newChromosome,i);
-                tmp++;
-            }else {
-                newChromosome.setOneBit(i,this.getOneBit(i));
+                changeBit(i);
             }
         }
-
-        return newChromosome;
     }
 
     /**
      * Zmiana danego bitu w chromosomie na przeciwny
-     * @param chromosome Chromosom do zmiany bitu
      * @param bit Miejsce w którym znajduje się bit do zmiany
      */
-    static void changeBit(Chromosome chromosome,int bit) {
-        if(chromosome.getOneBit(bit) == 0)  chromosome.setOneBit(bit,1);
-        else chromosome.setOneBit(bit,0);
+    void changeBit(int bit) {
+        if(getOneBit(bit) == 0)  setOneBit(bit,1);
+        else setOneBit(bit,0);
+        value = null;
     }
 
     /**
@@ -115,7 +111,7 @@ public class Chromosome {
      * @param itsFirstChild Informacja które to dziecko, czy  pierwsze czy drugie
      * @return Dziecko podanych rodziców
      */
-    public static Chromosome createChild(Chromosome dad, Chromosome mom, boolean itsFirstChild){
+    public static Chromosome createChild(Chromosome dad, Chromosome mom,int numberOfCuts, boolean itsFirstChild){
         //Tworzenie dziecka z wartościami jak u taty
         Chromosome child = new Chromosome(dad.function);
 
@@ -128,7 +124,7 @@ public class Chromosome {
         //Obliczanie długości chromomosomu
         int chromosomeLength = dad.function.getGenesNumber()* dad.gensLenght;
         //Tworzenie tablicy z informacjami gdzie ciąć;
-        int[] wherCut = new int[dad.function.getNumberOfCuts()];
+        int[] wherCut = new int[numberOfCuts];
 
         //Przypisywanie losowych wartości i sortowanie miejsc gdzie uciąć
         Random r = new Random();
@@ -271,6 +267,8 @@ public class Chromosome {
      * @return Wartosć funkcji
      */
     public double decodeChromosome() {
-            return  function.decodeFunction(this);
+        if(this.value == null)
+             this.value = function.decodeFunction(this);
+        return this.value;
     }
 }

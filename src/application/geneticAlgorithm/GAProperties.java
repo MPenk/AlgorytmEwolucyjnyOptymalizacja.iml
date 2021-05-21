@@ -4,6 +4,7 @@ import application.functions.Function;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class GAProperties {
 
@@ -17,9 +18,11 @@ public class GAProperties {
     private int from = 20;
     private int to = 200;
     private int step = 20;
+    private int graduationOnTheChart;
+    private int numberOfCuts; //Ilosć cięć
     public ExecutorService threadPool;
 
-    public GAProperties(Function functions, int nThreads, int repetitions, int generations, int from, int to, int step) {
+    public GAProperties(Function functions, int nThreads, int repetitions, int generations, int from, int to, int step,int numberOfCuts) {
         this.functions = functions;
         this.nThreads = nThreads;
         this.repetitions = repetitions;
@@ -27,6 +30,10 @@ public class GAProperties {
         this.from = from;
         this.to = to;
         this.step = step;
+        this.numberOfCuts = numberOfCuts;
+        this.graduationOnTheChart = getGenerations();
+        if(graduationOnTheChart>100)
+            graduationOnTheChart = 100;
     }
 
     public double getPc() {
@@ -69,11 +76,19 @@ public class GAProperties {
         return populationSize;
     }
 
+    public int getNumberOfCuts() {
+        return numberOfCuts;
+    }
+
+    public int getGraduationOnTheChart() {
+        return graduationOnTheChart;
+    }
+
     public void setPopulationSize(int populationSize) {
         this.populationSize = populationSize;
     }
     public void reloadThreadPool()
     {
-        this.threadPool = Executors.newFixedThreadPool(this.nThreads);
+        this.threadPool = Executors.newFixedThreadPool(nThreads);
     }
 }

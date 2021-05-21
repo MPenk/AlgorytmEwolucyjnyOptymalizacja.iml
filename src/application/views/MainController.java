@@ -2,14 +2,18 @@ package application.views;
 
 import application.functions.Function;
 import application.geneticAlgorithm.GAProperties;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
+import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 
@@ -40,20 +44,24 @@ public class MainController {
     private TextField tboxGenerations;
 
     @FXML
+    private TextField tboxNumberOfCuts;
+
+    @FXML
     void btnStart_OnClicked(MouseEvent event) throws IOException {
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(this.getClass().getResource("Calculations.fxml"));
         StackPane calculationPanel = loader.load();
         Stage stage = new Stage();
+        stage.getIcons().add(new Image(this.getClass().getResourceAsStream("/application/img/ico.png")));
         stage.setMinHeight(400);
         stage.setMinWidth(600);
-        stage.setTitle("Obliczenia");
         stage.setScene(new Scene(calculationPanel));
         stage.getScene().getStylesheets().add(this.getClass().getResource("style.css").toExternalForm());
         CalculationsController controller = loader.getController();
         stage.setOnHidden(e->controller.shutdown());
-        GAProperties gaProperties = new GAProperties(this.getFunction(),this.getThreads(),this.getRepetitions(),this.getGenerations(),this.getFrom(),this.getTo(),this.getStep());
+        GAProperties gaProperties = new GAProperties(this.getFunction(),this.getThreads(),this.getRepetitions(),this.getGenerations(),this.getFrom(),this.getTo(),this.getStep(),this.getNumberOfCuts());
         controller.initData(gaProperties);
+        stage.setTitle(gaProperties.getFunction().toString());
         stage.show();
         controller.main();
     }
@@ -63,6 +71,9 @@ public class MainController {
             this.chbxFunction.getItems().add(functions);
         }
         chbxFunction.setValue(chbxFunction.getItems().get(2));
+        chbxFunction.setOnAction((actionEvent ->
+            this.tboxNumberOfCuts.setText(String.valueOf(getFunction().getRecommendedNumberOfCuts()))
+        ));
     }
     public void setThreads(){
         int threads = Runtime.getRuntime().availableProcessors();
@@ -83,6 +94,9 @@ public class MainController {
     }
     int getGenerations(){
         return Integer.parseInt(tboxGenerations.getText());
+    }
+    int getNumberOfCuts(){
+        return Integer.parseInt(tboxNumberOfCuts.getText());
     }
     int getFrom(){
         return Integer.parseInt(tboxFrom.getText());

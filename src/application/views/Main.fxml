@@ -14,7 +14,7 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
-<StackPane minWidth="300.0" prefHeight="280.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.views.MainController">
+<StackPane minWidth="300.0" prefHeight="342.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.views.MainController">
    <children>
       <GridPane>
         <columnConstraints>
@@ -57,7 +57,7 @@
                               <Insets bottom="10.0" right="10.0" />
                            </HBox.margin>
                         </Text>
-                        <TextField fx:id="tboxRepetitions" maxWidth="50.0" text="1" HBox.hgrow="ALWAYS" />
+                        <TextField fx:id="tboxRepetitions" maxWidth="50.0" text="50" HBox.hgrow="ALWAYS" />
                      </children>
                      <VBox.margin>
                         <Insets bottom="10.0" />
@@ -83,7 +83,7 @@
                               <Insets right="10.0" />
                            </HBox.margin>
                         </Text>
-                        <TextField fx:id="tboxFrom" maxWidth="75.0" text="1">
+                        <TextField fx:id="tboxFrom" maxWidth="75.0" text="20">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -100,7 +100,7 @@
                               <Insets right="10.0" />
                            </HBox.margin>
                         </Text>
-                        <TextField fx:id="tboxTo" maxWidth="75.0" text="2">
+                        <TextField fx:id="tboxTo" maxWidth="75.0" text="200">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -117,7 +117,7 @@
                               <Insets right="10.0" />
                            </HBox.margin>
                         </Text>
-                        <TextField fx:id="tboxStep" maxWidth="75.0" text="1">
+                        <TextField fx:id="tboxStep" maxWidth="75.0" text="20">
                            <HBox.margin>
                               <Insets />
                            </HBox.margin>
@@ -134,11 +134,21 @@
                               <Insets right="10.0" />
                            </HBox.margin>
                         </Text>
-                        <TextField fx:id="tboxGenerations" maxWidth="100.0" text="20" />
+                        <TextField fx:id="tboxGenerations" maxWidth="100.0" text="1000" />
                      </children>
                      <VBox.margin>
-                        <Insets />
+                        <Insets bottom="10.0" />
                      </VBox.margin>
+                  </HBox>
+                  <HBox>
+                     <children>
+                        <Text strokeType="OUTSIDE" strokeWidth="0.0" text="Ilość cięć">
+                           <HBox.margin>
+                              <Insets right="10.0" />
+                           </HBox.margin>
+                        </Text>
+                        <TextField fx:id="tboxNumberOfCuts" maxWidth="100.0" text="4" />
+                     </children>
                   </HBox>
                </children>
                <GridPane.margin>

@@ -4,6 +4,8 @@ import application.enums.EFunctions;
 import application.other.Chromosome;
 import application.other.Population;
 
+import java.util.Comparator;
+
 public abstract class Function {
 
 
@@ -13,17 +15,17 @@ public abstract class Function {
     int d; //Wartość d, potrzebna do wyliczenia dokładności
     double min[]; //Wartość min
     double max[]; //Wartosć max
-    int numberOfCuts; //Ilosć cięć
+    int recommendedNumberOfCuts; //Ilosć cięć
 
 
 
-    public Function(int genesNumber, int d, double min[], double max[], int numberOfCuts, EFunctions eFunctions){
+    public Function(int genesNumber, int d, double min[], double max[], int recommendedNumberOfCuts, EFunctions eFunctions){
         this.function = eFunctions;
         this.genesNumber = genesNumber;
         this.d = d;
         this.min = min;
         this.max = max;
-        this.numberOfCuts = numberOfCuts;
+        this.recommendedNumberOfCuts = recommendedNumberOfCuts;
     }
 
     // Zwracanie czy nowa wartość jest poszukiwaną wartością
@@ -54,9 +56,11 @@ public abstract class Function {
         return genesNumber;
     }
 
-    public int getNumberOfCuts() {
-        return numberOfCuts;
+    public int getRecommendedNumberOfCuts() {
+        return recommendedNumberOfCuts;
     }
+
+    public Comparator<Chromosome> chromosomeComparator = (first, second) -> Double.compare(second.decodeChromosome(),first.decodeChromosome());
 
 
     @Override

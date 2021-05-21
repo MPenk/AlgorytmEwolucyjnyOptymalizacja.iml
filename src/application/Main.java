@@ -8,6 +8,7 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -22,18 +23,23 @@ public class Main extends Application {
     public void start(Stage primaryStage) throws Exception{
         FXMLLoader loader = new FXMLLoader();
         loader.setLocation(this.getClass().getResource("views/Main.fxml"));
-
         StackPane mainPanel = loader.load();
+        primaryStage.getIcons().add(new Image(this.getClass().getResourceAsStream("/application/img/ico.png")));
+
         primaryStage.setTitle("Algorytmy Genetyczne");
         Scene scene = new Scene(mainPanel, 300,300);
         primaryStage.setScene(scene);
-        primaryStage.setMinHeight(300);
+        primaryStage.setMinHeight(400);
         primaryStage.setMinWidth(400);
+        primaryStage.setResizable(false);
+        primaryStage.getScene().getStylesheets().add(this.getClass().getResource("views/style.css").toExternalForm());
+
         primaryStage.show();
         MainController controller = loader.getController();
 
         controller.setFunction(createFunctions());
         controller.setThreads();
+        System.out.println(System.getProperty("java.version"));
 
     }
 

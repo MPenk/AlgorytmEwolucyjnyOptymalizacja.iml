@@ -1,15 +1,12 @@
 package application.other;
 
 import application.functions.Function;
+import application.geneticAlgorithm.GAProperties;
 import application.views.CalculationsController;
-import javafx.application.Platform;
 
 import java.io.PrintStream;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
-import java.util.Random;
-import java.util.concurrent.TimeUnit;
+import java.util.*;
+import java.util.concurrent.*;
 
 public class Population {
     /**
@@ -33,10 +30,11 @@ public class Population {
      * @param N ilośc chromosomów
      * @param function informacje o chromosomie
      */
-    public void createNChromosomes(int N, Function function) {
+    public void createNChromosomes(int N, Function function) throws InterruptedException {
         for(int i = 0; i < N; ++i) {
             this.add(new Chromosome(function));
         }
+        this.checkingLimitations();
     }
 
     public Chromosome getWanted(){
@@ -130,35 +128,19 @@ public class Population {
         System.out.println();
     }
 
-    private  void addToPoplation(Population population){
-        for (Chromosome chromosom: this.population
-             ) {
-            population.population.add(chromosom);
+    private void removeBad(int oldSize){
+        //Sortowanie dla najelpszych osobników
+        population.sort(population.get(0).function.chromosomeComparator);
+
+        //Wyciągnięcie najlepszych osobników
+        for (int i = oldSize; i < population.size(); i++) {
+            population.remove(i--);
         }
     }
 
     double tabALL[] = new double[population.size()];
-    private void removeBad(int oldSize){
-
-        this.getTab();
-        population.sort(new Comparator<Chromosome>() {
-            @Override
-            public int compare(Chromosome first, Chromosome second)
-            {
-                return Double.compare(first.decodeChromosome(),second.decodeChromosome());
-            }
-        });
-        this.getTab();
-        for (int i = oldSize; i < population.size(); i++) {
-            population.remove(i--);
-        }
-        this.getTab();
-
-    }
     public double[] getTab(){
-
         double tab[] = new double[population.size()];
-
         for (int i = 0; i <population.size(); i++) {
             tab[i] = population.get(i).decodeChromosome();
         }
@@ -172,28 +154,36 @@ public class Population {
      * @param pm Prawdopodobieństwo mutacji
      * @return Nowa populacja
      */
-    public Population ga(double pc, double pm, CalculationsController controller) throws InterruptedException {
+    public Population ga(double pc, double pm, GAProperties gaProperties, CalculationsController controller) throws InterruptedException {
         //Krzyżowanie populacji
-
-        Population p = multipointCrossingPopulation(pc);
-
-        addToPoplation(p);
+        Population p = multipointCrossingPopulation(pc, gaProperties.getNumberOfCuts());
 
         //Mutowanie Populacji
         p.mutatePopulation(pm);
-       //p.getTab();
+
+        //Usuwanie złych osobników
         p.removeBad(population.size());
+
         //Sprawdzanie ograniczeń
         p.checkingLimitations();
-        //p.getTab();
 
         //Zwracanie populacji
         return p;
     }
-
     public void checkingLimitations() {
         for (Chromosome chromosome: population)
             chromosome.checkingLimitations();
+    }
+
+    public void checkingLimitationsMultiThread() throws InterruptedException {
+        ExecutorService threadPool = Executors.newFixedThreadPool(2);
+
+        List<Callable<Thread>> tasks = new ArrayList<>();
+        for (Chromosome chromosome: population)
+            threadPool.submit(new Thread(() -> chromosome.checkingLimitations()));
+
+        threadPool.shutdown();
+        Thread.currentThread().join();
     }
 
     /**
@@ -202,14 +192,15 @@ public class Population {
      */
     public void mutatePopulation(double pm){
         Random r = new Random();
+
         //Przejście po całej populacji
         for (int i = 0; i < this.population.size(); i++) {
-            //Jeśli wylosowana liczba jest mniejsza niż prawdopodobieństow
+            //Jeśli wylosowana liczba jest większa niż prawdopodobieństow
             if(r.nextDouble()>pm)
                 //Pomiń chromosom
                 continue;
-            //W aktualne miejsce chromosomu, wstaw nowy zmutowany chromosom
-            population.set(i,population.get(i).mutate());
+            //Mutacja chromosomu
+            population.get(i).mutate();
         }
     }
 
@@ -218,7 +209,7 @@ public class Population {
      * @param pc Prawdopodobieństwo skrzyżowania pojedyńczego osobnika
      * @return Populację nowych (skrzyżowanych) i statych osobników
      */
-    public Population multipointCrossingPopulation(double pc) {
+    public Population multipointCrossingPopulation(double pc,int numberOfCuts) {
         Random r = new Random();
         int wasCrossedInt = 0;
         //tablica przechowywująca informacje czy Chromosom był już skrzyżowany i wypełnienie jej
@@ -246,8 +237,8 @@ public class Population {
                 break;
             }
             //Dodanie do populacji dzieci dwóch skrzyżowanych osobników
-            newPopulation.add( Chromosome.createChild(population.get(i), population.get(j),true));
-            newPopulation.add( Chromosome.createChild(population.get(i), population.get(j),false));
+            newPopulation.add( Chromosome.createChild(population.get(i), population.get(j),numberOfCuts,true));
+            newPopulation.add( Chromosome.createChild(population.get(i), population.get(j),numberOfCuts,false));
 
             //Ustawienie osobników aby nie byli już dostepni do następnego krzyżowania
             wasCrossed[i] = true;
@@ -262,6 +253,10 @@ public class Population {
         //        newPopulation.add(population.get(i));
         //    }
         //}
+
+        //Dodanie rodziców do nowej populacji
+        for (Chromosome chromosome:population)
+            newPopulation.add(chromosome);
 
         //zwrócenie nowej populacji
         return newPopulation;
