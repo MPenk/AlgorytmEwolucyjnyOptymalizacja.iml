@@ -5,5 +5,6 @@ to aplikacja do rozwiązywania problemów optymalizayjnych. **AlgorytmEwolucyjny
 
 ## Uruchomienie
 
+[Pobierz aplikację.](https://github.com/MPenk/AlgorytmEwolucyjnyOptymalizacja.iml/releases)
 Aby uruchomić  **AlgorytmEwolucyjnyOptymalizacja** wymagane jest, aby na komputerze docelowym zainstalowana była Java.
 > **Ważne:** aby aplikacja działała poprawnie wymagana jest Java w wersji **8** lub nowszej.
