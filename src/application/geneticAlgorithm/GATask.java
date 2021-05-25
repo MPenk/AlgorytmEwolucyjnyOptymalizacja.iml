@@ -127,9 +127,9 @@ public class GATask implements Callable<double[]> {
                 sum+=tab[j][i];
             }
 
-           // if(wanted==null || gaProperties.getFunction().getWanted(wanted,(sum/gaProperties.getRepetitions()))){
+            if(wanted==null || gaProperties.getFunction().getWanted(wanted,(sum/gaProperties.getRepetitions()))){
                 wanted = sum/gaProperties.getRepetitions();
-            //}
+            }
             tab[gaProperties.getRepetitions()][i] = wanted;
             // System.out.println( tab[gaProperties.getRepetitions()][i] + " i = " + i);
         }

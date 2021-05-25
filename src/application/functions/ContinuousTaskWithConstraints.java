@@ -117,8 +117,8 @@ public class ContinuousTaskWithConstraints extends Function {
             chromosome.getGen(9).generateGenInRange(0,3);
         }
 
-        //Ograniczenie 5 //-2x4-x9+x12<=0
-        while (!checkLimitation(chromosome.getGen(3),chromosome.getGen(8),chromosome.getGen(11)))
+        //Ograniczenie 5 //-2x8-x9+x12<=0
+        while (!checkLimitation(chromosome.getGen(7),chromosome.getGen(8),chromosome.getGen(11)))
         {
             //jesli x12>3 to wylosuj nowe od (0;3) i sprawdź czy ok jeśli nie to losuj co zmienić
             if(chromosome.getGen(11).decodeGen()>3){
@@ -127,7 +127,7 @@ public class ContinuousTaskWithConstraints extends Function {
             }
             rand = r.nextDouble();
             if(rand<0.333){
-                chromosome.getGen(3).generateGenInRange(0,1);
+                chromosome.getGen(7).generateGenInRange(0,1);
                 continue;
             }
             if(rand<0.666){
