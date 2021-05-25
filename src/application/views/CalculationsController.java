@@ -144,12 +144,10 @@ public class CalculationsController {
     }
 
     public void clearDataToActualChart() {
-        if (!seriesActual.getData().isEmpty()) {
-            seriesActual.getData().clear();
-        }
+        seriesActual.getData().clear();
     }
 
-    void addNewTab(double[][] data, int number) {
+    void addNewTab(double[] data, int number) {
         Tab newTab = new Tab();
         this.TabPane.getTabs().add(newTab);
         newTab.setText("Populacja o wielkości " + number);
@@ -162,7 +160,7 @@ public class CalculationsController {
         stackPane.getChildren().add(lineChart);
         int i;
         for (i = 0; i < gaProperties.getGenerations(); i++) {
-            series.getData().add(new XYChart.Data(i, data[gaProperties.getRepetitions()][i]));
+            series.getData().add(new XYChart.Data(i, data[i]));
 
         }
         series.setName("Wykres dla GA o wielkości populacji " + number);
@@ -173,6 +171,7 @@ public class CalculationsController {
         yAxis.setForceZeroInRange(false);
         yAxis.setAutoRanging(true);
         lineChart.getData().add(series);
+        data = null;
 
     }
     void startGA() throws InterruptedException {
@@ -185,25 +184,27 @@ public class CalculationsController {
             gaProperties.reloadThreadPool();
             //Zapisywanie wyników algorytmu do tablicy
             gaProperties.setPopulationSize(i* gaProperties.getStep());
-            double tab[][] = GATask.GAStart(gaProperties,this);
+            double tab[] = GATask.GAStart(gaProperties,this);
 
-            String fileName = "Funckja_"+gaProperties.getFunction().toString()+"_o_wielkosc_populacji_"+String.valueOf(i);
+            String fileName = "Funckja_"+gaProperties.getFunction().toString()+"_o_wielkosc_populacji_"+gaProperties.getPopulationSize();
             //Tworzenie pliku
             FileOperations.createFile(fileName);
             //Zapisywanie wyników do pliku
             FileOperations.saveToFile(fileName,tab,gaProperties);
 
-            int finalI = i* gaProperties.getStep();
+            int finalI = gaProperties.getPopulationSize();
             Platform.runLater(() ->  this.addNewTab(tab, finalI));
-
             //Informacja w konsoli
             Long lapTime = (System.nanoTime() - lastLapTime);
             long duration = lapTime/1000000000;
             System.out.println("==========================================");
-            System.out.println("Zrobiono dla populaci o wielkości "+ i*gaProperties.getStep() + " w " + duration + " sekund");
+            System.out.println("Zrobiono dla populaci o wielkości "+ gaProperties.getPopulationSize() + " w " + duration + " sekund");
             System.out.println("==========================================");
             lastLapTime = System.nanoTime();
         }
+        Platform.runLater(() ->  clearDataToActualChart());
+
+
         long endTime = System.nanoTime();
         long duration = (endTime - startTime)/1000000000;
         double minutes = ((double)duration)/60;

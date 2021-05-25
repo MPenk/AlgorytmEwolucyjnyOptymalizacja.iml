@@ -35,7 +35,6 @@ public class GATask implements Callable<double[]> {
         if( threadNumber== 0)
             isGoodThread=true;
         int iterationToSplit = (gaProperties.getGenerations()/ gaProperties.getGraduationOnTheChart());
-        ArrayList<Double[]> arrayListToLiveChart = new ArrayList<>();
 
         //Tworzenie pierwszej populacji
         Population population = new Population();
@@ -43,6 +42,7 @@ public class GATask implements Callable<double[]> {
 
         //Tabela do przechowywania danych
         double allWantedValues[] = new double[gaProperties.getGenerations()];
+        ArrayList<Double[]> arrayListToLiveChart = new ArrayList<>();
 
         if(isGoodThread)
             Platform.runLater(() ->  controller.clearDataToActualChart());
@@ -72,19 +72,16 @@ public class GATask implements Callable<double[]> {
                     Platform.runLater(() -> controller.addDataToActualChart(finalI,gaProperties.getGraduationOnTheChart(), arrayListToLiveChart, (repetitionNumber + 1) + " powtórzenie dla populacji o wielkości " + gaProperties.getPopulationSize()));
             }
         }
-
         //System.out.println("Wykonano " + repetitionNumber + " powtórzenie dla ga " + gaProperties.getPopulationSize());
 
-        XYChart.Series series = new XYChart.Series();
-        series.setName(repetitionNumber + " powtórzenie dla ga " + gaProperties.getPopulationSize());
 
         //Wyświetlenie całego wykresu na końcu
         //if(isGoodThread) Platform.runLater(() -> controller.addDataToActualChart(0,gaProperties.getGraduationOnTheChart(), allWantedValues, (repetitionNumber + 1) + " powtórzenie dla populacji o wielkości " + gaProperties.getPopulationSize()));
-
+        arrayListToLiveChart.clear();
         return allWantedValues;
     }
 
-    static public double [][] GAStart(GAProperties gaProperties, CalculationsController controller) throws InterruptedException {
+    static public double [] GAStart(GAProperties gaProperties, CalculationsController controller) throws InterruptedException {
 
         List<GATask> tasks = new ArrayList<>();
         double tab[][] = new double[gaProperties.getRepetitions()+1][gaProperties.getGenerations()+1];
@@ -118,7 +115,7 @@ public class GATask implements Callable<double[]> {
         gaProperties.threadPool.shutdown();
 
         Double wanted = null;
-
+        double newTab[] = new double[gaProperties.getGenerations()];
         //Obliczanie średniej z wszyskich przejść algorytmu i wybieranie szukanego osobnika
         for (int i = 0; i < gaProperties.getGenerations(); i++) {
             double sum = 0;
@@ -131,11 +128,12 @@ public class GATask implements Callable<double[]> {
                 wanted = sum/gaProperties.getRepetitions();
             }
             tab[gaProperties.getRepetitions()][i] = wanted;
+            newTab[i]=wanted;
             // System.out.println( tab[gaProperties.getRepetitions()][i] + " i = " + i);
         }
 
         //zwrócenie wyniku
-        return tab;
+        return newTab;
     }
 
 }

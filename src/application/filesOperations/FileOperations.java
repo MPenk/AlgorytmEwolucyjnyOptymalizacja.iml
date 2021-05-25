@@ -37,12 +37,12 @@ public class FileOperations {
      * @param fileName Nazwa pliku
      * @param tab Yabela z której pobrane będą dane
      */
-    static public void saveToFile(String fileName, double tab[][], GAProperties gaProperties){
+    static public void saveToFile(String fileName, double tab[], GAProperties gaProperties){
         try {
             FileWriter myWriter = new FileWriter(FileOperations.path+fileName+".txt");
             myWriter.write("Wyniki pomiarów;\n");
             for (int i = 0; i < gaProperties.getGenerations(); i++) {
-                myWriter.write(tab[gaProperties.getRepetitions()][i]+";\n");
+                myWriter.write(tab[i]+";\n");
             }
             myWriter.close();
             System.out.println("Successfully wrote to the file.");
