@@ -3,12 +3,14 @@ package application.views;
 import application.filesOperations.FileOperations;
 import application.geneticAlgorithm.GAProperties;
 import application.geneticAlgorithm.GATask;
+import javafx.animation.AnimationTimer;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
+import javafx.scene.control.Label;
 import javafx.scene.control.ProgressBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -36,6 +38,9 @@ public class CalculationsController {
     @FXML
     private TabPane TabPane;
 
+    @FXML
+    private Label fps;
+
     final NumberAxis xAxisActual = new NumberAxis();
     final NumberAxis yAxisActual = new NumberAxis();
     final LineChart<Number,Number> lineChartActual = new LineChart<Number,Number>(xAxisActual,yAxisActual);
@@ -44,6 +49,10 @@ public class CalculationsController {
     GAProperties gaProperties;
     Thread mainThread;
 
+    AnimationTimer frameRateMeter;
+    private final long[] frameTimes = new long[10];
+    private int frameTimeIndex = 0 ;
+    private boolean arrayFilled = false ;
     @FXML
     void initialize(){
         lineChartActual.getData().add(seriesActual);
@@ -53,13 +62,34 @@ public class CalculationsController {
         yAxisActual.setAutoRanging(true);
         yAxisActual.setLowerBound(0);
 
+        frameRateMeter = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                long oldFrameTime = frameTimes[frameTimeIndex] ;
+                frameTimes[frameTimeIndex] = now ;
+                frameTimeIndex = (frameTimeIndex + 1) % frameTimes.length ;
+                if (frameTimeIndex == 0) {
+                    arrayFilled = true ;
+                }
+                if (arrayFilled) {
+                    long elapsedNanos = now - oldFrameTime ;
+                    long elapsedNanosPerFrame = elapsedNanos / frameTimes.length ;
+                    double frameRate = 1_000_000_000.0 / elapsedNanosPerFrame ;
+                    fps.setStyle("-fx-text-fill: green;");
+                    if(frameRate<45) fps.setStyle("-fx-text-fill: goldenrod;");
+                    if(frameRate<15) fps.setStyle("-fx-text-fill: red;");
+                    fps.setText(String.format("FPS: %.1f", frameRate));
+                }
+            }
+        };
+        frameRateMeter.start();
     }
 
     void initData(GAProperties gaProperties){
         this.gaProperties = gaProperties;
         createProgressBars();
-
     }
+
     void createProgressBars(){
         for (int i = 0; i <  this.gaProperties.getnThreads(); i++) {
             ProgressBar progressBar = new ProgressBar();
@@ -77,6 +107,9 @@ public class CalculationsController {
        progressBar.setProgress(progress);
     }
 
+    /**
+     * Uruchomienie algorytmu GA na osobnym wątku
+     */
     void main(){
         mainThread = new Thread(() -> {
             try {
@@ -89,26 +122,22 @@ public class CalculationsController {
         });
         mainThread.setDaemon(true);
         mainThread.start();
-        TabPane.getScene().setOnKeyPressed(new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent keyEvent) {
-                switch (keyEvent.getCode()){
-                    case RIGHT:
-                        TabPane.getSelectionModel().selectNext();
-                        break;
-                    case LEFT:
-                        TabPane.getSelectionModel().selectLast();
-                        break;
-                }
+        TabPane.getScene().setOnKeyPressed(keyEvent -> {
+            switch (keyEvent.getCode()){
+                case RIGHT:
+                    TabPane.getSelectionModel().selectNext();
+                    break;
+                case LEFT:
+                    TabPane.getSelectionModel().selectLast();
+                    break;
             }
         });
     }
 
-    public void addDataToActualChart(int i,int graduationOnTheChart, ArrayList<Double[]> tab, String name)
-    {
+    public void addDataToActualChart(int i,int graduationOnTheChart, ArrayList<Double[]> tab, String name) {
+        if (tab.size() == 0)
+            return;
         synchronized (tab) {
-            if (tab.size() == 0)
-                return;
             try {
                 for (int j = 0; j < tab.size(); j++) {
 
@@ -128,25 +157,18 @@ public class CalculationsController {
         this.xAxisActual.setLowerBound(0);
     }
 
-    public void addDataToActualChart(int i,int graduationOnTheChart, double[] tab, String name)
-    {
-        for (double value: tab
-             ) {
-            seriesActual.getData().add(new XYChart.Data(i, value));
-            i++;
-        }
-
-        seriesActual.setName(name);
-        this.xAxisActual.setAutoRanging(false);
-        this.xAxisActual.setUpperBound(i);
-        this.xAxisActual.setTickUnit(i/graduationOnTheChart);
-        this.xAxisActual.setLowerBound(0);
-    }
-
+    /**
+     * Wyczyszczenie wykresu z aktualnymi danymi
+     */
     public void clearDataToActualChart() {
         seriesActual.getData().clear();
     }
 
+    /**
+     * Dodawanie nowego wykresu
+     * @param data Dane do wyświetlenia na wykresie
+     * @param number Informacja które to powtórzenie
+     */
     void addNewTab(double[] data, int number) {
         Tab newTab = new Tab();
         this.TabPane.getTabs().add(newTab);
@@ -171,14 +193,16 @@ public class CalculationsController {
         yAxis.setForceZeroInRange(false);
         yAxis.setAutoRanging(true);
         lineChart.getData().add(series);
-        data = null;
-
     }
+
+    /**
+     * Uruchomienie GA
+     */
     void startGA() throws InterruptedException {
         long startTime = System.nanoTime();
         long lastLapTime = startTime;
         gaProperties.reloadThreadPool();
-        //Platform.runLater(() ->  createProgressBars());
+
         //Pętla odpowiedzialna za obliczanie algorytmów genetycznego dla różnych wielkości populacji
         for (int i = gaProperties.getFrom(); i <= gaProperties.getTo() ; i+=gaProperties.getStep()) {
             gaProperties.reloadThreadPool();
@@ -204,7 +228,6 @@ public class CalculationsController {
         }
         Platform.runLater(() ->  clearDataToActualChart());
 
-
         long endTime = System.nanoTime();
         long duration = (endTime - startTime)/1000000000;
         double minutes = ((double)duration)/60;
@@ -217,6 +240,13 @@ public class CalculationsController {
         Platform.runLater(() ->  this.txtProgress.setStyle("-fx-fill: green;"));
 
     }
+
+    /**
+     * Zaokrąglenie liczby do określonej ilości miejsc po przecinku
+     * @param value Wartość do zaokrąglenia
+     * @param places Ilość miejsc po przecinku
+     * @return Zaokrąglona liczba
+     */
     protected static double round(double value, int places) {
         if (places < 0) throw new IllegalArgumentException();
 
@@ -224,14 +254,16 @@ public class CalculationsController {
         bd = bd.setScale(places, RoundingMode.HALF_UP);
         return bd.doubleValue();
     }
-    public void shutdown()
-    {
+
+    /**
+     * Zatrzymanie wszystkich aktywnych wątków
+     */
+    public void shutdown() {
         if(!gaProperties.threadPool.isShutdown())
             gaProperties.threadPool.shutdown();
         if(mainThread != null)
             mainThread.stop();
+        frameRateMeter.stop();
         System.out.println("ZAMYSKANIE");
-
-        //System.exit(0);
     }
 }

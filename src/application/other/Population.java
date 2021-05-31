@@ -2,11 +2,11 @@ package application.other;
 
 import application.functions.Function;
 import application.geneticAlgorithm.GAProperties;
-import application.views.CalculationsController;
 
 import java.util.*;
 
 public class Population {
+
     /**
      * Przechowywanie populacji
      */
@@ -33,6 +33,11 @@ public class Population {
             this.add(new Chromosome(function));
 
     }
+
+    /**
+     * Pobranie wartości najlepszego osbnika w populacji
+     * @return wartość funkcji szukanego chromosomu w populacji
+     */
     public double getWantedValue(){
         double wanted = population.get(0).decodeChromosome();
         for (int i = 1; i < population.size(); i++) {
@@ -46,7 +51,7 @@ public class Population {
 
     /**
      * Zwrócenie wartości najlepszego chromosomu w populacji
-     * @return wartość funkcji nalepszego chromosomui w populacji
+     * @return wartość funkcji nalepszego chromosomu w populacji
      */
     public double getTheBest(){
         double max = population.get(0).decodeChromosome();
@@ -57,9 +62,10 @@ public class Population {
         }
         return max;
     }
+
     /**
      * Zwrócenie wartości najgorszego chromosomu w populacji
-     * @return wartość funkcji najgorszego chromosomui w populacji
+     * @return wartość funkcji najgorszego chromosomu w populacji
      */
     public double getTheWorst(){
         double min = population.get(0).decodeChromosome();
@@ -71,6 +77,10 @@ public class Population {
         return min;
     }
 
+    /**
+     * Usuwanie najgorszych osobników
+     * @param oldSize Stara wielkość do jakiej ma zostać zredukowana populacja
+     */
     private void removeBad(int oldSize){
         //Sortowanie dla najelpszych osobników
         population.sort(population.get(0).function.chromosomeComparator);
@@ -81,14 +91,14 @@ public class Population {
         }
     }
 
-
     /**
      * Uruchomienie algorytmu genetycznego dla populacji
      * @param pc Prawdopdobieństo krzyżowania
      * @param pm Prawdopodobieństwo mutacji
+     * @param gaProperties Ustawienia aktualnie przeprowadzanego algorytmu genetycznego.
      * @return Nowa populacja
      */
-    public Population ga(double pc, double pm, GAProperties gaProperties, CalculationsController controller) throws InterruptedException {
+    public Population ga(double pc, double pm, GAProperties gaProperties) {
         //Krzyżowanie populacji
         Population p = multipointCrossingPopulation(pc, gaProperties.getNumberOfCuts());
 
@@ -104,6 +114,10 @@ public class Population {
         //Zwracanie populacji
         return p;
     }
+
+    /**
+     * Sprawdzanie ograniczeń
+     */
     public void checkingLimitations() {
         for (Chromosome chromosome: population)
                chromosome.checkingLimitations();

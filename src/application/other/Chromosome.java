@@ -3,9 +3,7 @@ package application.other;
 import application.exceptions.IncorrectLimitationException;
 import application.functions.Function;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.Random;
 
 public class Chromosome {
@@ -20,6 +18,9 @@ public class Chromosome {
      */
     int gensLenght;
 
+    /**
+     * Wartość osobnika, aby nie musiała być za każdym razem obliczana
+     */
     Double value = null;
 
     /**
@@ -43,15 +44,24 @@ public class Chromosome {
         this.checkingLimitations();
     }
 
+    /**
+     * Sprawdzenie ograniczeń chromosomu
+     */
     public void checkingLimitations() {
         try {
             this.function.checkingLimitations(this);
         }catch (IncorrectLimitationException exception){
+            //Jeśli jest jakiś problem - chromosom się mutuje i ponownie sprawdza ograniczenia
             mutate();
             checkingLimitations();
         }
     }
 
+    /**
+     * Pobranie określonego genu
+     * @param i numer genu
+     * @return wybrany gen
+     */
     public Gen getGen(int i) {
         this.value = null;
         return gens[i];

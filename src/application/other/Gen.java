@@ -26,7 +26,6 @@ public class Gen {
         if(((max - min) * Math.pow(10.0D, (double)d))==1)
             this.genLength = 1;
         this.genTab = new int[this.genLength];
-
     }
 
     /**
@@ -49,20 +48,14 @@ public class Gen {
      * @param n Numer bitu
      * @param value Nowa wartość bitu
      */
-    public void setBit(int n, int value)
-    {
-        genTab[n] = value;
-    }
+    public void setBit(int n, int value) { genTab[n] = value; }
 
     /**
      * Pobranie wartości bitu w danym miejscu
      * @param n Numer miejsca do pobrania wartości
      * @return Wartość genu w danym miejscu
      */
-    int getBit(int n)
-    {
-        return genTab[n];
-    }
+    int getBit(int n) { return genTab[n]; }
 
     /**
      * Dekodowanie genu - zwrócenie jego dziesiętnej wartości
@@ -98,6 +91,10 @@ public class Gen {
         return (int)Math.round(r.nextDouble());
     }
 
+    /**
+     * Ustawia gen na podaną wartość w systemie dziesiętnym
+     * @param valueInDec wartość dziesiętna na którą ma zostać ustawiony gen
+     */
     public void setGen(int valueInDec){
         //TODO: OPTYMALIZACJA
         String tmp  = Integer.toBinaryString(valueInDec);
@@ -113,11 +110,16 @@ public class Gen {
         }
     }
 
-    public void generateGenInRange(int min, int max)
-    {
+    /**
+     * Ponowne generowanie genu w podanym przedziale
+     * @param min minimalna wartość genu
+     * @param max maksymalna wartość genu
+     */
+    public void generateGenInRange(int min, int max) {
         int i = (int) ((Math.random() * (max - min)) + min);
         this.setGen(i);
     }
+
     /**
      * Obliczenie logarytmu
      * @param d

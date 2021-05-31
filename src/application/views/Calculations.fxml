@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
@@ -48,6 +49,11 @@
                               <Font name="System Bold" size="13.0" />
                            </font>
                         </Text>
+                     </children>
+                  </StackPane>
+                  <StackPane>
+                     <children>
+                        <Label fx:id="fps" text="FPS" />
                      </children>
                   </StackPane>
                   <VBox fx:id="VBoxProgress" prefHeight="200.0" prefWidth="100.0" />

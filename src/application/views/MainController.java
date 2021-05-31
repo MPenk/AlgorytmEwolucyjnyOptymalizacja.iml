@@ -2,9 +2,7 @@ package application.views;
 
 import application.functions.Function;
 import application.geneticAlgorithm.GAProperties;
-import javafx.application.Platform;
 import javafx.collections.ObservableList;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -13,7 +11,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 
 import java.io.IOException;
 
@@ -64,6 +61,7 @@ public class MainController {
         stage.setTitle(gaProperties.getFunction().toString());
         stage.show();
         controller.main();
+
     }
 
     public void setFunction(ObservableList<Function> list){

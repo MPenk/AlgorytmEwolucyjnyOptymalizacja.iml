@@ -26,17 +26,14 @@ public class ContinuousTaskWithConstraints extends Function {
     }
 
     //Ograniczenie dla 2 podanych genów
-    protected boolean checkLimitation(Gen gen1, Gen gen2)
-    {
+    protected boolean checkLimitation(Gen gen1, Gen gen2) {
         double limitation = 0;
         limitation -= (8 * gen1.decodeGen());
         limitation += (gen2.decodeGen());
         return limitation <= 0;
     }
-
     //Ograniczenie dla 3 podanychGenów
-    protected boolean checkLimitation(Gen gen1, Gen gen2, Gen gen3)
-    {
+    protected boolean checkLimitation(Gen gen1, Gen gen2, Gen gen3) {
         double limitation = 0;
         limitation -= (2*gen1.decodeGen());
         limitation -= (gen2.decodeGen());
@@ -44,8 +41,7 @@ public class ContinuousTaskWithConstraints extends Function {
         return limitation <= 0;
     }
     //Ograniczenie dla 4 podanychGenów
-    protected boolean checkLimitation(Gen gen1, Gen gen2, Gen gen3, Gen gen4)
-    {
+    protected boolean checkLimitation(Gen gen1, Gen gen2, Gen gen3, Gen gen4) {
         double limitation = 0;
         limitation += (2*gen1.decodeGen());
         limitation += (2*gen2.decodeGen());
