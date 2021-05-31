@@ -160,14 +160,14 @@ public class CalculationsController {
         stackPane.getChildren().add(lineChart);
         int i;
         for (i = 0; i < gaProperties.getGenerations(); i++) {
-            series.getData().add(new XYChart.Data(i, data[i]));
+            series.getData().add(new XYChart.Data(i+1, data[i]));
 
         }
         series.setName("Wykres dla GA o wielkości populacji " + number);
         xAxis.setAutoRanging(false);
         xAxis.setUpperBound(i);
         xAxis.setTickUnit(i/100);
-        xAxis.setLowerBound(0);
+        xAxis.setLowerBound(1);
         yAxis.setForceZeroInRange(false);
         yAxis.setAutoRanging(true);
         lineChart.getData().add(series);

@@ -60,7 +60,8 @@ public class GATask implements Callable<double[]> {
 
             //zapisywanie szukanego osobnika
             allWantedValues[i] = population.getWantedValue();
-            arrayListToLiveChart.add(new Double[]{Double.valueOf(i),allWantedValues[i]});
+            if(isGoodThread)
+                synchronized (arrayListToLiveChart) {arrayListToLiveChart.add(new Double[]{Double.valueOf(i),allWantedValues[i]});}
 
             int finalI = i;
 
