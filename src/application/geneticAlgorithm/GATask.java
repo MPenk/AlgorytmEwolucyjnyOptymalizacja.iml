@@ -1,10 +1,8 @@
 package application.geneticAlgorithm;
 
-import application.geneticAlgorithm.GAProperties;
 import application.other.Population;
 import application.views.CalculationsController;
 import javafx.application.Platform;
-import javafx.scene.chart.XYChart;
 
 import java.util.ArrayList;
 import java.util.List;

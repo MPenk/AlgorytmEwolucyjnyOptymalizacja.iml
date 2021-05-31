@@ -180,10 +180,10 @@ public class CalculationsController {
         gaProperties.reloadThreadPool();
         //Platform.runLater(() ->  createProgressBars());
         //Pętla odpowiedzialna za obliczanie algorytmów genetycznego dla różnych wielkości populacji
-        for (int i = (gaProperties.getFrom()/ gaProperties.getStep()); i <= (gaProperties.getTo() / gaProperties.getStep()); i++) {
+        for (int i = gaProperties.getFrom(); i <= gaProperties.getTo() ; i+=gaProperties.getStep()) {
             gaProperties.reloadThreadPool();
             //Zapisywanie wyników algorytmu do tablicy
-            gaProperties.setPopulationSize(i* gaProperties.getStep());
+            gaProperties.setPopulationSize(i);
             double tab[] = GATask.GAStart(gaProperties,this);
 
             String fileName = "Funckja_"+gaProperties.getFunction().toString()+"_o_wielkosc_populacji_"+gaProperties.getPopulationSize();

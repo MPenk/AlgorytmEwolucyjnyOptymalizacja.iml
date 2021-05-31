@@ -4,9 +4,7 @@ import application.functions.Function;
 import application.geneticAlgorithm.GAProperties;
 import application.views.CalculationsController;
 
-import java.io.PrintStream;
 import java.util.*;
-import java.util.concurrent.*;
 
 public class Population {
     /**
@@ -35,18 +33,6 @@ public class Population {
             this.add(new Chromosome(function));
 
     }
-
-    public Chromosome getWanted(){
-        Chromosome wanted = population.get(0);
-        for (int i = 1; i < population.size(); i++) {
-            Chromosome chromosome = population.get(i);
-            if(chromosome.function.getWanted(wanted.decodeChromosome(),chromosome.decodeChromosome())){
-                wanted = chromosome;
-            }
-        }
-        return wanted;
-    }
-
     public double getWantedValue(){
         double wanted = population.get(0).decodeChromosome();
         for (int i = 1; i < population.size(); i++) {
@@ -85,48 +71,6 @@ public class Population {
         return min;
     }
 
-    public void showOnlyFunction() {
-        System.out.println("=======================");
-        this.population.forEach((n) -> System.out.println(n.decodeChromosome()));
-        System.out.println();
-    }
-
-    public void showOnlyBits() {
-        System.out.println("=======================");
-        this.population.forEach((n) -> System.out.println(n.showChromosome()));
-        System.out.println();
-    }
-
-    public void showAll() {
-        System.out.println("=======================");
-        System.out.println(population.size());
-        System.out.println();
-        this.population.forEach((n) -> {
-            PrintStream var10000 = System.out;
-            String var10001 = n.showChromosome();
-            var10000.println(var10001 + " " + n.decodeChromosome());
-        });
-        System.out.println();
-    }
-
-    public void showAverage() {
-        System.out.println("=======================");
-        System.out.println("Średnia wartość to: " + Chromosome.averageFun(this.population));
-        System.out.println();
-    }
-
-    public void showLowerThanAverage() {
-        System.out.println("=======================");
-        System.out.println("Mniej niż średnia wartość: " + Chromosome.lowerThanAverage(this.population));
-        System.out.println();
-    }
-
-    public void showHigherThanAverage() {
-        System.out.println("=======================");
-        System.out.println("Więcej lub tyle samo co średnia wartość: " + Chromosome.higherThanAverage(this.population));
-        System.out.println();
-    }
-
     private void removeBad(int oldSize){
         //Sortowanie dla najelpszych osobników
         population.sort(population.get(0).function.chromosomeComparator);
@@ -137,15 +81,6 @@ public class Population {
         }
     }
 
-    double tabALL[] = new double[population.size()];
-    public double[] getTab(){
-        double tab[] = new double[population.size()];
-        for (int i = 0; i <population.size(); i++) {
-            tab[i] = population.get(i).decodeChromosome();
-        }
-        tabALL =tab;
-        return tab;
-    }
 
     /**
      * Uruchomienie algorytmu genetycznego dla populacji
@@ -172,17 +107,6 @@ public class Population {
     public void checkingLimitations() {
         for (Chromosome chromosome: population)
                chromosome.checkingLimitations();
-    }
-
-    public void checkingLimitationsMultiThread() throws InterruptedException {
-        ExecutorService threadPool = Executors.newFixedThreadPool(2);
-
-        List<Callable<Thread>> tasks = new ArrayList<>();
-        for (Chromosome chromosome: population)
-            threadPool.submit(new Thread(() -> chromosome.checkingLimitations()));
-
-        threadPool.shutdown();
-        Thread.currentThread().join();
     }
 
     /**
@@ -258,24 +182,6 @@ public class Population {
             newPopulation.add(chromosome);
 
         //zwrócenie nowej populacji
-        return newPopulation;
-    }
-
-    /**
-     * Metoda ruletkowa
-     * @return Nowa populacja
-     */
-    public Population rouletteMethod() {
-        Population newPopulation = new Population();
-
-        try {
-            for(int i = 0; i < this.population.size(); ++i) {
-                newPopulation.add(Chromosome.rouletteMethod(this.population));
-            }
-        } catch (Exception var3) {
-            System.out.println("Nie udało się stworzył nowej populacji: " + var3.getMessage());
-        }
-
         return newPopulation;
     }
 }
