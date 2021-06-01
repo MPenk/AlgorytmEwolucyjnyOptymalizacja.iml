@@ -32,7 +32,7 @@ public class ContinuousTaskWithConstraints extends Function {
         limitation += (gen2.decodeGen());
         return limitation <= 0;
     }
-    //Ograniczenie dla 3 podanychGenów
+    //Ograniczenie dla 3 podanych genów
     protected boolean checkLimitation(Gen gen1, Gen gen2, Gen gen3) {
         double limitation = 0;
         limitation -= (2*gen1.decodeGen());
@@ -40,7 +40,7 @@ public class ContinuousTaskWithConstraints extends Function {
         limitation += (gen3.decodeGen());
         return limitation <= 0;
     }
-    //Ograniczenie dla 4 podanychGenów
+    //Ograniczenie dla 4 podanych genów
     protected boolean checkLimitation(Gen gen1, Gen gen2, Gen gen3, Gen gen4) {
         double limitation = 0;
         limitation += (2*gen1.decodeGen());
@@ -152,7 +152,6 @@ public class ContinuousTaskWithConstraints extends Function {
             }
             chromosome.getGen(10).generateGenInRange(0,3);
         }
-
 
         //Ograniczenie 1 //2x1+2x2+x10+x11<=10
         if(!checkLimitation(chromosome.getGen(0),chromosome.getGen(1),chromosome.getGen(9),chromosome.getGen(10)))
