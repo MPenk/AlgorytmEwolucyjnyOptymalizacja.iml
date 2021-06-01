@@ -236,7 +236,8 @@ public class CalculationsController {
         double finalMinutes = minutes;
         Platform.runLater(() ->  this.txtProgress.setText("KONIEC W: " + finalMinutes + " minuty"));
         Platform.runLater(() ->  this.txtProgress.setStyle("-fx-fill: green;"));
-
+        frameRateMeter.stop();
+        fps.setVisible(false);
     }
 
     /**
