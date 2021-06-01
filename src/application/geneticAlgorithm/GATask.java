@@ -58,6 +58,9 @@ public class GATask implements Callable<double[]> {
 
             //zapisywanie szukanego osobnika
             allWantedValues[i] = population.getWantedValue();
+            double valuea = allWantedValues[i];
+            if(valuea>Double.parseDouble("14"))
+                System.out.println(valuea + " " + population.getWantedChromosome().showChromosome());
             if(isGoodThread)
                 synchronized (arrayListToLiveChart) {
                 arrayListToLiveChart.add(new Double[]{Double.valueOf(i),allWantedValues[i]});

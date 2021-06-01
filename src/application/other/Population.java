@@ -49,6 +49,17 @@ public class Population {
         return wanted;
     }
 
+    public Chromosome getWantedChromosome(){
+        Chromosome wanted = population.get(0);
+        for (int i = 1; i < population.size(); i++) {
+            Chromosome value = population.get(i);
+            if(population.get(i).function.getWanted(wanted.decodeChromosome(),value.decodeChromosome())){
+                wanted = value;
+            }
+        }
+        return wanted;
+    }
+
     /**
      * Zwrócenie wartości najlepszego chromosomu w populacji
      * @return wartość funkcji nalepszego chromosomu w populacji
